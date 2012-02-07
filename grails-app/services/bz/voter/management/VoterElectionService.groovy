@@ -52,7 +52,7 @@ class VoterElectionService {
 
     static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
                                         //"affiliation.name as affiliation, " +
-                                        "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
+                                        "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 0 THEN 0 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 1 THEN 1 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 2 THEN 2 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 3 THEN 3 " +

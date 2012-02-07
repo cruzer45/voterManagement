@@ -153,6 +153,8 @@ class VotesChartComposer extends GrailsComposer {
 
 
         def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
+        voteCounts = voteCounts.sort{it.vote_time}
+        println "\nvoteCounts: ${voteCounts}"
         hourlyCountRows.append{
             for(hourVote in voteCounts){
                 switch(hourVote.vote_hour){
@@ -280,7 +282,7 @@ class VotesChartComposer extends GrailsComposer {
 
                     case "18":
                         row{
-                            label(value: "${TwentyFourHourEnum.EIGHTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${EIGHTEEN.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
@@ -302,6 +304,20 @@ class VotesChartComposer extends GrailsComposer {
                     case "21":
                         row{
                             label(value: "${TWENTY_ONE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "22":
+                        row{
+                            label(value: "${TWENTY_TWO.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "23":
+                        row{
+                            label(value: "${TWENTY_THREE.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
