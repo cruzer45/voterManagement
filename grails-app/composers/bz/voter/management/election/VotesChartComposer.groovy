@@ -159,7 +159,7 @@ class VotesChartComposer extends GrailsComposer {
 
                     case "01":
                         row{
-                            label(value: "${TwentyFourHourEnum.ONE.value()}", class:"voteCountLabels")
+                            label(value: "${ONE.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         
                         }
@@ -218,49 +218,49 @@ class VotesChartComposer extends GrailsComposer {
                     case "09":
                         row{
                             label(value: "${NINE.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "10":
                         row{
                             label(value: "${TEN.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "11":
                         row{
                             label(value: "${ELEVEN.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "12":
                         row{
                             label(value: "${TWELVE.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "13":
                         row{
                             label(value: "${THIRTEEN.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "14":
                         row{
                             label(value: "${FOURTEEN.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "15":
                         row{
                             label(value: "${FIFTEEN.value()}", class:"voteCountLabels")
-                            labe(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
