@@ -40,7 +40,6 @@ class VotesChartComposer extends GrailsComposer {
     Division division
     PollStation pollStation
     Election election
-    def affiliations
 
     Hlayout hlayout
 
@@ -50,7 +49,6 @@ class VotesChartComposer extends GrailsComposer {
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             def electionId = Executions.getCurrent().getArg().electionId
-            affiliations = Affiliation.list()
 
             election = Election.get(electionId.toLong())
 

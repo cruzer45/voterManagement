@@ -161,7 +161,7 @@ class VoterElectionService {
                         "ORDER BY vote_hour "
 
 
-    static String PLEDGE_SUMMARY_QUERY = "select count(ve.voter), pledge.name "+
+    static String PLEDGE_SUMMARY_QUERY = "select count(ve.voter) as total_voters, pledge.name as pledge "+
                         "from VoterElection ve " +
                         "inner join ve.pledge pledge " +
                         "inner join ve.voter voter " +
@@ -582,7 +582,18 @@ class VoterElectionService {
     }
 
 
-    def countTotalByHour(Election election, Division division){
+    /**
+    Counts the total number of votes in a division for a given election, and groups it by hours and voter affiliation.
+    @param Election
+    @param Division
+    @return List with map of votes count:
+    <ul>
+        <li>votes_count</li>
+        <li>affiliation</li>
+        <li>vote_hour</li>
+    </ul>
+    **/
+    def countTotalHourlyVotesByAffiliation(Election election, Division division){
         SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
         namedParameters.addValue("division_id", division.id)
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
@@ -590,22 +601,56 @@ class VoterElectionService {
         def results = namedParameterJdbcTemplate.queryForList(HOURLY_TOTAL_COUNT_BY_AFFILIATION_QUERY,namedParameters )
 
         return results
-    
+
     }
 
+
+
+    /**
+    Summarizes the total number of votes casted by hour grouped by pledge.
+    @param Election
+    @param Division
+    @return List of maps :
+    <ul>
+        <li>votes_count</li>
+        <li>vote_hour</li>
+        <li>pledge</li>
+    </ul>
+    **/
+    def countTotalHourlyVotesByPledge(Election election, Division division){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
+        namedParameters.addValue("division_id", division.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(HOURLY_TOTAL_COUNT_BY_PLEDGE_QUERY, namedParameters)
+        return results
+    }
 
 
     /**
     Summary of total voters grouped by pledges.
     @param Election
     @param Division
-    @return List
+    @return List of map:
+        <ul>
+            <li>total_voters</li>
+            <li>pledge</li>
+        </ul>
     **/
     def summaryByPledge(Election election, Division division){
+        def results  = []
 
-        def results = VoterElection.executeQuery(PLEDGE_SUMMARY_QUERY , [
+        def data = VoterElection.executeQuery(PLEDGE_SUMMARY_QUERY , [
                             division: division,
                             election: election])
+
+        for(pledgedVoters in data ){
+            def row = [
+                total_voters: pledgedVoters[0],
+                pledge: pledgedVoters[1]
+            ]
+            results.push(row)
+        }
         return results
     }
 

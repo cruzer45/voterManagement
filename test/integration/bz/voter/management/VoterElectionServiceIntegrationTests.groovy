@@ -378,7 +378,9 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
         
         doVotes(election)
 
-        voterElectionService.countTotalByHour(election, albertDivision)
+        def results = voterElectionService.countTotalHourlyVotesByAffiliation(election, albertDivision)
+        assertNotNull results
+        println "\ntotal hourly votes by affiliation: ${results}\n"
 
      }
 
@@ -388,6 +390,18 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
         voterElectionService.addAllVoters(election)
 
         assertNotNull voterElectionService.summaryByPledge(election,albertDivision)
+     }
+
+
+     void test_total_hourly_votes_by_affiliation(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+        doVotes(election)
+
+        def results = voterElectionService.countTotalHourlyVotesByPledge(election, albertDivision)
+        assertNotNull results
+        println "\ntotal hourly votes by pledge: ${results}\n"
+        
      }
 
 
