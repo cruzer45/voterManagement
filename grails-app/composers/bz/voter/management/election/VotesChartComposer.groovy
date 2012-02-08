@@ -153,7 +153,7 @@ class VotesChartComposer extends GrailsComposer {
 
 
         def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
-        voteCounts = voteCounts.sort{it.vote_time}
+        voteCounts = voteCounts.sort{it.vote_hour}
         println "\nvoteCounts: ${voteCounts}"
         hourlyCountRows.append{
             for(hourVote in voteCounts){
