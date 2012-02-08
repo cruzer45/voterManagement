@@ -57,6 +57,18 @@ class VoterService {
 			"where poll.division =:division " +
             "and v.affiliation =:affiliation " 
 
+
+    static String AFFILIATION_SUMMARY_QUERY = "SELECT COUNT(v.id) as total, " +
+            "affiliation.name as party " +
+            "from VoterElection ve " +
+            "inner join ve.voter v " +
+            "inner join v.pollStation poll " +
+            "inner join v.affiliation affiliation " +
+            "where poll.division =:division " +
+            "and ve.election =:election " +
+            "group by affiliation.name " +
+            "order by affiliation.name "
+
     static String FILTER_BY_POLLSTATION_QUERY = "select v " +
 			"from Voter as v " +
 			"inner join v.pollStation as poll " +
@@ -64,6 +76,7 @@ class VoterService {
 			"where poll.division =:division " +
             "and v.pollStation =:pollStation " +
 			"order by person.lastName"
+
 
 
     static String GET_COUNT_BY_POLLSTATION = "select count(v) " +
@@ -352,12 +365,22 @@ class VoterService {
     }
 
 
-    def countByPollStation(division, pollStation){
+    def countByPollStation(Division division, PollStation pollStation){
         def results = Voter.executeQuery(GET_COUNT_BY_POLLSTATION,
             [division: division,
              pollStation: pollStation])
 
         return results[0]
+    }
+
+
+    def summaryByAffiliation(Election election, Division division){
+        def results = Voter.executeQuery(AFFILIATION_SUMMARY_QUERY,
+            [division: division,
+             election: election
+            ])
+
+        return results
     }
 
 

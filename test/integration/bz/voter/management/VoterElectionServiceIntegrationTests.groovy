@@ -383,6 +383,14 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
      }
 
 
+     void test_summary_by_pledge(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        assertNotNull voterElectionService.summaryByPledge(election,albertDivision)
+     }
+
+
      private void doVotes(Election election){
         def cnt = 0
         VoterElection.findAllByElection(election).each{ve->

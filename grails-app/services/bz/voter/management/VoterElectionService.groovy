@@ -159,6 +159,18 @@ class VoterElectionService {
                         "AND ve.vote_time IS NOT NULL AND ve.voted IS TRUE " +
                         "GROUP BY pledge, vote_hour " +
                         "ORDER BY vote_hour "
+
+
+    static String PLEDGE_SUMMARY_QUERY = "select count(ve.voter), pledge.name "+
+                        "from VoterElection ve " +
+                        "inner join ve.pledge pledge " +
+                        "inner join ve.voter voter " +
+                        "inner join voter.pollStation as poll " +
+                        "where ve.election =:election " +
+                        "and poll.division =:division " +
+                        "group by pledge.name " +
+                        "order by pledge.name"
+
                                            
 
    def sessionFactory
@@ -579,6 +591,22 @@ class VoterElectionService {
 
         return results
     
+    }
+
+
+
+    /**
+    Summary of total voters grouped by pledges.
+    @param Election
+    @param Division
+    @return List
+    **/
+    def summaryByPledge(Election election, Division division){
+
+        def results = VoterElection.executeQuery(PLEDGE_SUMMARY_QUERY , [
+                            division: division,
+                            election: election])
+        return results
     }
 
 

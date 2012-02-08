@@ -8,6 +8,7 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 
 
 	def voterService
+    def voterElectionService
 
     protected void setUp() {
         super.setUp()
@@ -109,9 +110,21 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
         def division = Division.findByName('Albert')
         def affiliation = Affiliation.findByName('UNKNOWN')
 
-        def unknownVoters = voterService.filter(affiliation, division,0 ,0) 
+        def unknownVoters = voterService.filter(FilterType.AFFILIATION,affiliation, division,0 ,0) 
 
         assertEquals 2, unknownVoters.size()
+    }
+
+
+    void test_affiliation_summary(){
+        def division = Division.findByName('Albert')
+        def election = Election.findByYear(2012) ?: new Election(year:2012, completed: false, electionType: ElectionType.findByName("General")).save()
+        voterElectionService.addAllVoters(election)
+
+
+        def voters = voterService.summaryByAffiliation(election, division)
+
+        assertNotNull voters
     }
 
 
