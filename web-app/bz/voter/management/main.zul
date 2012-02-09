@@ -85,7 +85,8 @@
         }
 
         .passwordRows{
-            font-size: 1em
+            font-size: 1em;
+            font-weight: bold
         }
 
 	</style>
@@ -105,8 +106,8 @@
 				</vlayout>
 			</west>
 			<center id="centerArea" vflex="1">
-				<div id="center" vflex="1">
-                    <hbox style="padding: 100 20 0 300">
+				<div id="center" vflex="1" align="center">
+                    <hbox style="margin: 2em">
 			            <image src="/images/undecided-voter.jpg" align="center" /> 
                     </hbox>
 				</div>

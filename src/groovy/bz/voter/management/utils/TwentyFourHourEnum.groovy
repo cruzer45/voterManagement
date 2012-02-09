@@ -24,7 +24,7 @@ public enum TwentyFourHourEnum{
     TWENTY_ONE('21-22'),
     TWENTY_TWO('22-23'),
     TWENTY_THREE('23-24'),
-    TWENTY_FOUR('24-0')
+    TWENTY_FOUR('0-1')
 
 
     final String name

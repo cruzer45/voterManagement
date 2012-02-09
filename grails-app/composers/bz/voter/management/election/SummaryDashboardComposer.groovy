@@ -190,6 +190,45 @@ class SummaryDashboardComposer extends GrailsComposer {
                 }
             }
         }//End of affiliationVotesColumns.append
+
+        def affiliationRows = []
+        TwentyFourHourEnum.values().each{hourEnum->
+            def rowRecord = [hour: hourEnum.value(), PUP:0, UDP:0, UNKNOWN:0]
+            def hourMark = hourEnum.value().split('-')[0]
+            def affiliationRecord = affiliationVotes.findAll{v->
+                v.vote_hour == hourMark.trim().toLong()
+            }
+            for(record in affiliationRecord){
+                switch(record.affiliation){
+
+                    case 'PUP':
+                        rowRecord.PUP = record.votes_count
+                        break
+
+                    case 'UDP':
+                        rowRecord.UDP = record.votes_count
+                        break
+
+                    case 'UNKNOWN':
+                        rowRecord.UNKNOWN = record.votes_count
+                        break
+                }
+            }
+
+            affiliationRows.push(rowRecord)
+
+        }
+
+        for(voteRecord in affiliationRows){
+            affiliationVotesRows.append{
+                row{
+                    label(value: "${voteRecord.hour}", class:"voteCountLabels")
+                    label(value: "${voteRecord.PUP}", class:"voteCountLabels")
+                    label(value: "${voteRecord.UDP}", class:"voteCountLabels")
+                    label(value: "${voteRecord.UNKNOWN}", class:"voteCountLabels")
+                }
+            }
+        }
     }
 
 }
