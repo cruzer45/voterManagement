@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./summaryDashboardPanel" ?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <panel id="summaryDashboardPanel"  title="Summary of Votes" border="rounded"
+        vflex="3" hflex="4" style="overflow:auto"
+        apply="bz.voter.management.election.SummaryDashboardComposer">
+
+        <panelchildren>
+
+            <div style="margin: 0.01em" vflex="3">
+                <hlayout hflex="4" vflex="3">
+
+                    <vlayout hflex="2" vflex="3">
+
+                        <vbox id="pledgesSummaryBox" vflex="min" hflex="2">
+                            <grid id="pledgesSummaryGrid" hflex="1" vflex="min" 
+                                style="margin: 0.1em 0.25em 0.25em 0.25em">
+                                <auxhead>
+                                    <auxheader label="Total Voters by Pledge" style="font-size: 0.75em" colspan="2" />
+                                </auxhead>
+                                <columns>
+                                    <column label="Pledge" style="font-size: 0.75em" hflex="1" align="center"/>
+                                    <column label="Total Voters" style="font-size: 0.75em" hflex="1" align="center"/>
+                                </columns>
+                                <rows id="pledgesSummaryRows" >
+                                </rows>
+                            </grid>
+                        </vbox>
+
+                        <vbox vflex="2" hflex="2">
+                            <grid id="pledgeVotesGrid" hflex="2"  vflex="2"
+                                visible="false" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                                <auxhead>
+                                    <auxheader label="Hourly Votes By Pledge" style="font-size: 0.75em" colspan="3"/>
+                                </auxhead>
+                                <columns id="pledgeVotesColumns">
+                                </columns>
+                                <rows id="pledgeVotesRows">
+                                </rows>
+                            </grid>
+                        </vbox>
+
+                    </vlayout>
+
+                    <vlayout hflex="2" vflex="3">
+                        <vbox vflex="min" hflex="2">
+                            <grid id="affiliationSummaryGrid" vflex="min" hflex="2" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                                <auxhead>
+                                    <auxheader label="Total Voters by Affiliation" style="font-size: 0.75em" colspan="2" />
+                                </auxhead>
+                                <columns id="affiliationColumns">
+                                </columns>
+                                <rows id="affiliationRows" >
+                                </rows>
+                            </grid>
+                        </vbox>
+
+                        <vbox vflex="2" hflex="2">
+                            <grid id="affiliationVotesGrid" vflex="2" hflex="2" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                                <auxhead>
+                                    <auxheader label="Hourly Votes By Affiliation" style="font-size: 0.75em" colspan="3" />
+                                </auxhead>
+                                <columns id="affiliationVotesColumns">
+                                </columns>
+                                <rows id="affiliationVotesRows">
+                                </rows>
+                            </grid>
+                        </vbox>
+
+                    </vlayout>
+
+                </hlayout>
+            </div>
+
+        </panelchildren>
+
+    </panel>
+
+</zk>

@@ -48,7 +48,7 @@ class VoterNewFormComposer extends GrailsComposer {
    def afterCompose = { window ->
 		if(springSecurityService.isLoggedIn()){
 
-          centerPanel = voterFormWindow.getParent().getParent().getParent()
+          centerPanel = voterFormWindow.getParent().getParent()
 
 		  if(Executions.getCurrent().getArg().id){
 				voterIdLabel.setValue(Executions.getCurrent().getArg().id.toString())

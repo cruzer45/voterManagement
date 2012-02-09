@@ -40,7 +40,6 @@ class VotesChartComposer extends GrailsComposer {
     Division division
     PollStation pollStation
     Election election
-    def affiliations
 
     Hlayout hlayout
 
@@ -50,7 +49,6 @@ class VotesChartComposer extends GrailsComposer {
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             def electionId = Executions.getCurrent().getArg().electionId
-            affiliations = Affiliation.list()
 
             election = Election.get(electionId.toLong())
 
@@ -152,19 +150,8 @@ class VotesChartComposer extends GrailsComposer {
        }
 
 
-        //hourlyCountHeader.colspan = affiliations.size()
-        /*
-        hourlyCountColumns.append{
-            column{
-                label(value:"Hour", class:"gridHeaders")
-            }
-            column{
-                label(value: "# of Votes", class:"gridHeaders")
-            }
-        }
-        */
-
         def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
+        voteCounts = voteCounts.sort{it.vote_hour}
         println "\nvoteCounts: ${voteCounts}"
         hourlyCountRows.append{
             for(hourVote in voteCounts){
@@ -172,7 +159,7 @@ class VotesChartComposer extends GrailsComposer {
 
                     case "1":
                         row{
-                            label(value: "${TwentyFourHourEnum.ONE.value()}", class:"voteCountLabels")
+                            label(value: "${ONE.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         
                         }
@@ -221,6 +208,62 @@ class VotesChartComposer extends GrailsComposer {
                         }
                         break
 
+                    case "8":
+                        row{
+                            label(value: "${EIGHT.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "9":
+                        row{
+                            label(value: "${NINE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "10":
+                        row{
+                            label(value: "${TEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "11":
+                        row{
+                            label(value: "${ELEVEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "12":
+                        row{
+                            label(value: "${TWELVE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "13":
+                        row{
+                            label(value: "${THIRTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "14":
+                        row{
+                            label(value: "${FOURTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "15":
+                        row{
+                            label(value: "${FIFTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
                     case "16":
                         row{
                             label(value: "${SIXTEEN.value()}", class:"voteCountLabels")
@@ -237,7 +280,7 @@ class VotesChartComposer extends GrailsComposer {
 
                     case "18":
                         row{
-                            label(value: "${TwentyFourHourEnum.EIGHTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${EIGHTEEN.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
@@ -259,6 +302,20 @@ class VotesChartComposer extends GrailsComposer {
                     case "21":
                         row{
                             label(value: "${TWENTY_ONE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "22":
+                        row{
+                            label(value: "${TWENTY_TWO.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "23":
+                        row{
+                            label(value: "${TWENTY_THREE.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break

@@ -118,6 +118,7 @@ class AddressPanelComposer extends GrailsComposer {
                 id:                 registrationAddress?.id,
                 houseNumber:        registrationAddressHouseNumberTextbox.getValue()?.trim(),
                 street:             registrationAddressStreetTextbox.getValue()?.trim(),
+                addressType:        REGISTRATION,
                 municipality:       registrationAddressMunicipalityListbox.getSelectedItem()?.getValue(),
                 phoneNumber1:       registrationAddressPhoneNumber1Textbox.getValue()?.trim(),
                 phoneNumber2:       registrationAddressPhoneNumber2Textbox.getValue()?.trim(),

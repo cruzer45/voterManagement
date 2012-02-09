@@ -51,9 +51,7 @@ class VoterElectionService {
 
 
     static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
-                                        //"affiliation.name as affiliation, " +
-                                        "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
-                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 1 THEN 1 " +
+                                        "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 1 THEN 1 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 2 THEN 2 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 3 THEN 3 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 4 THEN 4 " +
@@ -79,15 +77,101 @@ class VoterElectionService {
                                         "ELSE 0 END AS vote_hour " +
                                         "FROM voter_election as ve " +
                                         "inner join voter as v on ve.voter_id=v.id " +
-                                        //"inner join affiliation as affiliation on v.affiliation_id = affiliation.id " +
                                         "inner join poll_station as poll on v.poll_station_id = poll.id " +
-                                        "WHERE ve.election_id = :election_id " +
-                                        "and poll.id = :poll_station_id " +
-                                        "and poll.division_id = :division_id " +
+                                        "WHERE ve.election_id =:election_id " +
+                                        "and poll.id =:poll_station_id " +
+                                        "and poll.division_id =:division_id " +
                                         "and ve.vote_time IS NOT NULL and ve.voted IS TRUE " +
                                         "GROUP BY vote_hour"
-                                            
 
+
+    static String HOURLY_TOTAL_COUNT_BY_AFFILIATION_QUERY = 
+                        "SELECT count(ve.voter_id) as votes_count, " +
+                        "affiliation.name as affiliation, " +
+                        "CASE WHEN (EXTRACT(HOUR FROM ve.vote_time) = 1) THEN 1 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 2 THEN 2 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 3 THEN 3 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 4 THEN 4 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 5 THEN 5 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 7 THEN 7 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 8 THEN 8 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 9 THEN 9 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 10 THEN 10 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 11 THEN 11 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 12 THEN 12 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 13 THEN 13 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 14 THEN 14 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 15 THEN 15 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 16 THEN 16 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 17 THEN 17 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 18 THEN 18 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 19 THEN 19 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 20 THEN 20 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 21 THEN 21 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 22 THEN 22 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 23 THEN 23 " +
+                        "ELSE 0 END AS vote_hour " +
+                        "FROM voter_election as ve " +
+                        "INNER JOIN voter as v ON ve.voter_id = v.id "+
+                        "INNER JOIN poll_station as poll ON v.poll_station_id = poll.id "+
+                        "INNER JOIN affiliation as affiliation ON v.affiliation_id = affiliation.id "+
+                        "WHERE ve.election_id =:election_id " +
+                        "AND poll.division_id = :division_id " +
+                        "AND ve.vote_time IS NOT NULL AND ve.voted IS TRUE " +
+                        "GROUP BY affiliation, vote_hour " +
+                        "ORDER BY vote_hour "
+
+
+   static String HOURLY_TOTAL_COUNT_BY_PLEDGE_QUERY = 
+                        "SELECT COUNT(ve.voter_id) as votes_count, " +
+                        "pledge.name as pledge, " +
+                        "CASE WHEN (EXTRACT(HOUR FROM ve.vote_time) = 1) THEN 1 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 2 THEN 2 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 3 THEN 3 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 4 THEN 4 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 5 THEN 5 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 7 THEN 7 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 8 THEN 8 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 9 THEN 9 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 10 THEN 10 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 11 THEN 11 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 12 THEN 12 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 13 THEN 13 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 14 THEN 14 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 15 THEN 15 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 16 THEN 16 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 17 THEN 17 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 18 THEN 18 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 19 THEN 19 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 20 THEN 20 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 21 THEN 21 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 22 THEN 22 " +
+                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 23 THEN 23 " +
+                        "ELSE 0 END AS vote_hour " +
+                        "FROM voter_election as ve " +
+                        "INNER JOIN voter as v ON ve.voter_id = v.id " +
+                        "INNER JOIN poll_station AS poll ON v.poll_station_id = poll.id " +
+                        "INNER JOIN pledge as pledge ON ve.pledge_id = pledge.id " +
+                        "WHERE ve.election_id = :election_id " +
+                        "AND poll.division_id = :division_id " +
+                        "AND ve.vote_time IS NOT NULL AND ve.voted IS TRUE " +
+                        "GROUP BY pledge, vote_hour " +
+                        "ORDER BY vote_hour "
+
+
+    static String PLEDGE_SUMMARY_QUERY = "select count(ve.voter) as total_voters, pledge.name as pledge "+
+                        "from VoterElection ve " +
+                        "inner join ve.pledge pledge " +
+                        "inner join ve.voter voter " +
+                        "inner join voter.pollStation as poll " +
+                        "where ve.election =:election " +
+                        "and poll.division =:division " +
+                        "group by pledge.name " +
+                        "order by pledge.name"
+
+                                           
 
    def sessionFactory
 
@@ -472,8 +556,19 @@ class VoterElectionService {
     return results[0]
    }
 
-
     
+    
+    /**
+    Counts the total votes by hour and poll station.
+    @param Election
+    @param Division
+    @param PollStation
+    @return List :
+    <ul>
+        <li>votes_count</li>
+        <li>vote_hour</li>
+    </ul>
+    **/
     def countByHourAndPollStation(Election election,Division division, PollStation pollStation){
 
         SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
@@ -483,39 +578,81 @@ class VoterElectionService {
 
         def results = namedParameterJdbcTemplate.queryForList(HOURLY_COUNT_BY_POLLSTATION_QUERY, namedParameters)
 
-        /*
-
-        results.each{
-            switch(it.vote_hour){
-                
-                case "14":
-                    println "${PickupTimeEnum.TWO.value()} : ${it.votes_count}"
-                    break
-
-                case "15":
-                    println "${PickupTimeEnum.THREE.value()} : ${it.votes_count}"
-                    break
-
-                case "16":
-                    println "${PickupTimeEnum.FOUR.value()}  : ${it.votes_count}"
-                    break
-
-                case "17":
-                    println "${PickupTimeEnum.FIVE.value()}  : ${it.votes_count}"
-                    break
-
-                case "18":
-                    println "${PickupTimeEnum.EIGHTEEN.value()}  : ${it.votes_count}"
-                    break
+        return results
+    }
 
 
-            }
-        }
-        */
+    /**
+    Counts the total number of votes in a division for a given election, and groups it by hours and voter affiliation.
+    @param Election
+    @param Division
+    @return List with map of votes count:
+    <ul>
+        <li>votes_count</li>
+        <li>affiliation</li>
+        <li>vote_hour</li>
+    </ul>
+    **/
+    def countTotalHourlyVotesByAffiliation(Election election, Division division){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
+        namedParameters.addValue("division_id", division.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(HOURLY_TOTAL_COUNT_BY_AFFILIATION_QUERY,namedParameters )
 
         return results
 
-   }
+    }
+
+
+
+    /**
+    Summarizes the total number of votes casted by hour grouped by pledge.
+    @param Election
+    @param Division
+    @return List of maps :
+    <ul>
+        <li>votes_count</li>
+        <li>vote_hour</li>
+        <li>pledge</li>
+    </ul>
+    **/
+    def countTotalHourlyVotesByPledge(Election election, Division division){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
+        namedParameters.addValue("division_id", division.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(HOURLY_TOTAL_COUNT_BY_PLEDGE_QUERY, namedParameters)
+        return results
+    }
+
+
+    /**
+    Summary of total voters grouped by pledges.
+    @param Election
+    @param Division
+    @return List of map:
+        <ul>
+            <li>total_voters</li>
+            <li>pledge</li>
+        </ul>
+    **/
+    def summaryByPledge(Election election, Division division){
+        def results  = []
+
+        def data = VoterElection.executeQuery(PLEDGE_SUMMARY_QUERY , [
+                            division: division,
+                            election: election])
+
+        for(pledgedVoters in data ){
+            def row = [
+                total_voters: pledgedVoters[0],
+                pledge: pledgedVoters[1]
+            ]
+            results.push(row)
+        }
+        return results
+    }
 
 
 

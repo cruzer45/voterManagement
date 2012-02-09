@@ -365,6 +365,47 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 
         def pollStation = PollStation.findByDivision(albertDivision)
 
+        doVotes(election)
+
+
+        voterElectionService.countByHourAndPollStation(election, albertDivision, pollStation)
+     }
+
+
+     void test_all_hourly_count(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+        
+        doVotes(election)
+
+        def results = voterElectionService.countTotalHourlyVotesByAffiliation(election, albertDivision)
+        assertNotNull results
+        println "\ntotal hourly votes by affiliation: ${results}\n"
+
+     }
+
+
+     void test_summary_by_pledge(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        assertNotNull voterElectionService.summaryByPledge(election,albertDivision)
+     }
+
+
+     void test_total_hourly_votes_by_affiliation(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+        doVotes(election)
+
+        def results = voterElectionService.countTotalHourlyVotesByPledge(election, albertDivision)
+        assertNotNull results
+        println "\ntotal hourly votes by pledge: ${results}\n"
+        
+     }
+
+
+     private void doVotes(Election election){
         def cnt = 0
         VoterElection.findAllByElection(election).each{ve->
             if(cnt < 4){
@@ -391,8 +432,6 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 
             cnt++
         }
-
-        voterElectionService.countByHourAndPollStation(election, albertDivision, pollStation)
      }
 
 }

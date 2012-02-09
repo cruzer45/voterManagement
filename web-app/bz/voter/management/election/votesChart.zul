@@ -15,6 +15,7 @@
 
         <panelchildren vflex="2">
             <toolbar>
+                <label value="Select Poll Station" />
 	            <listbox id="pollStationListbox" mold="select" rows="1"/>
 			    <button label="Display Votes" id="votesBtn" />
             </toolbar>
@@ -26,7 +27,7 @@
                         <h:h5> Votes Count </h:h5>
                         </vbox>
                         <vbox id="tableBox">
-                            <grid id="votesSummaryGrid" width="80%"  style="margin: 0.5em" visible="false">
+                            <grid id="votesSummaryGrid" width="90%" style="margin: 0.5em" visible="false">
                                 <auxhead>
                                     <auxheader label="Votes Casted Grouped By Affiliation" style="font-size: 0.9em" colspan="4"/>
                                 </auxhead>

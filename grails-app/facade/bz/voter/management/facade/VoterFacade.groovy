@@ -235,6 +235,10 @@ class VoterFacade {
                 case AddressEnum.WORK:
                     addressType = AddressType.findByName('Work')
                     break
+
+                case AddressEnum.REGISTRATION:
+                    addressType = AddressType.findByName("Registration")
+                    break
             }
 
             addressInstance.addressType = addressType

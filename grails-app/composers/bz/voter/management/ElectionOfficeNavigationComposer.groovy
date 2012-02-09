@@ -34,7 +34,8 @@ class ElectionOfficeNavigationComposer extends GrailsComposer {
 	 def onClick_dashboardButton(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
 			electionOfficeCenter.getChildren().clear()
-			Executions.createComponents("electionOfficeDashboard.zul",electionOfficeCenter,
+			//Executions.createComponents("electionOfficeDashboard.zul",electionOfficeCenter,
+			Executions.createComponents("/bz/voter/management/election/summaryDashboard.zul",electionOfficeCenter,
 			[electionId: election.id])
 		}else{
 			ComposerHelper.permissionDeniedBox()
