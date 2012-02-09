@@ -15,12 +15,13 @@
         <panelchildren>
 
             <div style="margin: 0.01em" vflex="3">
-                <hlayout hflex="4">
+                <hlayout hflex="4" vflex="3">
 
                     <vlayout hflex="2" vflex="3">
 
-                        <vbox id="pledgesSummaryBox" vflex="1" hflex="2">
-                            <grid id="pledgesSummaryGrid" hflex="1" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                        <vbox id="pledgesSummaryBox" vflex="min" hflex="2">
+                            <grid id="pledgesSummaryGrid" hflex="1" vflex="min" 
+                                style="margin: 0.1em 0.25em 0.25em 0.25em">
                                 <auxhead>
                                     <auxheader label="Total Voters by Pledge" style="font-size: 0.75em" colspan="2" />
                                 </auxhead>
@@ -33,11 +34,24 @@
                             </grid>
                         </vbox>
 
+                        <vbox vflex="2" hflex="2">
+                            <grid id="pledgeVotesGrid" hflex="2"  vflex="2"
+                                visible="false" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                                <auxhead>
+                                    <auxheader label="Hourly Votes By Pledge" style="font-size: 0.75em" colspan="3"/>
+                                </auxhead>
+                                <columns id="pledgeVotesColumns">
+                                </columns>
+                                <rows id="pledgeVotesRows">
+                                </rows>
+                            </grid>
+                        </vbox>
+
                     </vlayout>
 
                     <vlayout hflex="2" vflex="3">
-                        <vbox vflex="1" hflex="2">
-                            <grid id="affiliationSummaryGrid" hflex="1" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                        <vbox vflex="min" hflex="2">
+                            <grid id="affiliationSummaryGrid" vflex="min" hflex="1" style="margin: 0.1em 0.25em 0.25em 0.25em">
                                 <auxhead>
                                     <auxheader label="Total Voters by Affiliation" style="font-size: 0.75em" colspan="2" />
                                 </auxhead>

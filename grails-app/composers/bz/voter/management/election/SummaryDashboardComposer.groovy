@@ -14,6 +14,7 @@ import bz.voter.management.Election
 import bz.voter.management.Division
 import bz.voter.management.PollStation
 import bz.voter.management.Voter
+import bz.voter.management.Pledge
 import bz.voter.management.Affiliation
 import bz.voter.management.zk.ComposerHelper
 import static bz.voter.management.utils.TwentyFourHourEnum.*
@@ -27,6 +28,9 @@ class SummaryDashboardComposer extends GrailsComposer {
     def pledgesSummaryBox
     def pledgesSummaryGrid
     def pledgesSummaryRows
+    def pledgeVotesGrid
+    def pledgeVotesColumns
+    def pledgeVotesRows
 
     def affiliationSummaryGrid
     def affiliationColumns
@@ -35,6 +39,7 @@ class SummaryDashboardComposer extends GrailsComposer {
     def election
     def division
     def affiliations
+    def pledges
 
     def voterElectionService
     def voterService
@@ -46,10 +51,12 @@ class SummaryDashboardComposer extends GrailsComposer {
             election = Election.get(electionId.toLong())
             division = Division.findByName(ConfigurationHolder.config.division)
             affiliations = Affiliation.list([sort:'name'])
+            pledges = Pledge.list([sort:'name'])
 
             initPledgesSummaryRows()
             initAffiliationSummaryColumns()
             initAffiliationSummaryRows()
+            initPledgeVotesColumns()
 
         }else{
             ComposerHelper.permissionDeniedBox()
@@ -101,6 +108,50 @@ class SummaryDashboardComposer extends GrailsComposer {
                 }
             }
         }
+    }
+
+
+    def initPledgeVotesColumns(){
+        pledgeVotesColumns.getChildren().clear()
+        pledgeVotesGrid.setVisible(true)
+
+        def pledgeVotes = voterElectionService.countTotalHourlyVotesByPledge(election,division)
+
+        println "pledgeVotes : ${pledgeVotes}"
+
+        pledgeVotesColumns.append{
+            column{
+                label(value: "Hour", class: "gridHeaders")
+            }
+            for(pledge in pledges){
+                column{
+                    label(value: "${pledge.name}", class:"gridHeaders")
+                }
+            }
+        } //End of pledgeVotesColumns.append
+
+
+        pledgeVotesRows.append{
+            for(votes in pledgeVotes){
+                switch(votes.vote_hour){
+                    
+                    case "16":
+                        row{
+                            label(value: "${SIXTEEN.value()}", class:"voteCountLabels")
+                            for(pledge in pledges){
+                                println "votes: ${votes}"
+                                def _pledgeVotes = votes.find{v->
+                                    println "v: ${v}"
+                                    //v.pledge == "${pledge.name}"
+                                }
+                                //label(value: "${_pledgeVotes.votes_count}", class:"voteCountLabels")
+                            }
+                        }
+               
+                } 
+            }
+        }// End of pledgeVotesRows.append
+
     }
 
 }
