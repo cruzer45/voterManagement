@@ -18,6 +18,7 @@ import bz.voter.management.Pledge
 import bz.voter.management.Affiliation
 import bz.voter.management.zk.ComposerHelper
 import static bz.voter.management.utils.TwentyFourHourEnum.*
+import bz.voter.management.utils.TwentyFourHourEnum
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -35,6 +36,9 @@ class SummaryDashboardComposer extends GrailsComposer {
     def affiliationSummaryGrid
     def affiliationColumns
     def affiliationRows
+    def affiliationVotesGrid
+    def affiliationVotesColumns
+    def affiliationVotesRows
 
     def election
     def division
@@ -56,7 +60,8 @@ class SummaryDashboardComposer extends GrailsComposer {
             initPledgesSummaryRows()
             initAffiliationSummaryColumns()
             initAffiliationSummaryRows()
-            initPledgeVotesColumns()
+            initPledgeVotesGrid()
+            initAffiliationVotesGrid()
 
         }else{
             ComposerHelper.permissionDeniedBox()
@@ -111,16 +116,15 @@ class SummaryDashboardComposer extends GrailsComposer {
     }
 
 
-    def initPledgeVotesColumns(){
+    def initPledgeVotesGrid(){
         pledgeVotesColumns.getChildren().clear()
+        pledgeVotesRows.getChildren().clear()
         pledgeVotesGrid.setVisible(true)
 
         def pledgeVotes = voterElectionService.countTotalHourlyVotesByPledge(election,division)
 
-        println "pledgeVotes : ${pledgeVotes}"
-
         pledgeVotesColumns.append{
-            column{
+            column(align: "center"){
                 label(value: "Hour", class: "gridHeaders")
             }
             for(pledge in pledges){
@@ -131,27 +135,62 @@ class SummaryDashboardComposer extends GrailsComposer {
         } //End of pledgeVotesColumns.append
 
 
-        pledgeVotesRows.append{
-            for(votes in pledgeVotes){
-                switch(votes.vote_hour){
-                    
-                    case "16":
-                        row{
-                            label(value: "${SIXTEEN.value()}", class:"voteCountLabels")
-                            for(pledge in pledges){
-                                println "votes: ${votes}"
-                                def _pledgeVotes = votes.find{v->
-                                    println "v: ${v}"
-                                    //v.pledge == "${pledge.name}"
-                                }
-                                //label(value: "${_pledgeVotes.votes_count}", class:"voteCountLabels")
-                            }
-                        }
-               
-                } 
+        def pledgeRows = []
+
+        TwentyFourHourEnum.values().each{hourEnum->
+            def rowRecord = [hour: hourEnum.value(), Yes:0, No:0, Undecided:0]
+            def hourMark = hourEnum.value().split('-')[0]
+            def pledgeRecord = pledgeVotes.findAll{v->
+                v.vote_hour == hourMark.trim().toLong()
             }
-        }// End of pledgeVotesRows.append
+            for(record in pledgeRecord){
+                switch(record.pledge){
+                    case 'Yes':
+                        rowRecord.Yes = record.votes_count
+                        break
+                    case 'No':
+                        rowRecord.No = record.votes_count
+                        break
+
+                    case 'Undecided':
+                        rowRecord.Undecided = record.votes_count
+                        break
+                }
+            }
+
+            pledgeRows.push(rowRecord)
+        }
+
+        for(voteRecord in pledgeRows){
+            pledgeVotesRows.append{
+                row(align:"center"){
+                    label(value: "${voteRecord.hour}", class:"voteCountLabels")
+                    label(value: "${voteRecord.No}", class:"voteCountLabels")
+                    label(value: "${voteRecord.Undecided}", class:"voteCountLabels")
+                    label(value: "${voteRecord.Yes}", class:"voteCountLabels")
+                }
+            }
+        }
 
     }
 
+
+    def initAffiliationVotesGrid(){
+        affiliationVotesColumns.getChildren().clear()
+
+        def affiliationVotes = voterElectionService.countTotalHourlyVotesByAffiliation(election,division)
+
+        affiliationVotesColumns.append{
+            column{
+                label(value: "Hour", class:"gridHeaders")
+            }
+            for(affiliation in affiliations){
+                column{
+                    label(value: "${affiliation}", class:"gridHeaders")
+                }
+            }
+        }//End of affiliationVotesColumns.append
+    }
+
 }
+

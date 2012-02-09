@@ -26,10 +26,10 @@
                                     <auxheader label="Total Voters by Pledge" style="font-size: 0.75em" colspan="2" />
                                 </auxhead>
                                 <columns>
-                                    <column label="Pledge" style="font-size: 0.75em" hflex="1"/>
-                                    <column label="Total Voters" style="font-size: 0.75em" hflex="1"/>
+                                    <column label="Pledge" style="font-size: 0.75em" hflex="1" align="center"/>
+                                    <column label="Total Voters" style="font-size: 0.75em" hflex="1" align="center"/>
                                 </columns>
-                                <rows id="pledgesSummaryRows">
+                                <rows id="pledgesSummaryRows" >
                                 </rows>
                             </grid>
                         </vbox>
@@ -51,7 +51,7 @@
 
                     <vlayout hflex="2" vflex="3">
                         <vbox vflex="min" hflex="2">
-                            <grid id="affiliationSummaryGrid" vflex="min" hflex="1" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                            <grid id="affiliationSummaryGrid" vflex="min" hflex="2" style="margin: 0.1em 0.25em 0.25em 0.25em">
                                 <auxhead>
                                     <auxheader label="Total Voters by Affiliation" style="font-size: 0.75em" colspan="2" />
                                 </auxhead>
@@ -61,6 +61,19 @@
                                 </rows>
                             </grid>
                         </vbox>
+
+                        <vbox vflex="2" hflex="2">
+                            <grid id="affiliationVotesGrid" vflex="2" hflex="2" style="margin: 0.1em 0.25em 0.25em 0.25em">
+                                <auxhead>
+                                    <auxheader label="Hourly Votes By Affiliation" style="font-size: 0.75em" colspan="3" />
+                                </auxhead>
+                                <columns id="affiliationVotesColumns">
+                                </columns>
+                                <rows id="affiliationVotesRows">
+                                </rows>
+                            </grid>
+                        </vbox>
+
                     </vlayout>
 
                 </hlayout>
