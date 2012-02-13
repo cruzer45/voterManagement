@@ -16,11 +16,13 @@ class Voter implements Serializable{
 	PollStation pollStation
 	Pledge pledge
 	Affiliation affiliation
+	Zone zone
 
     static constraints = {
 	 	registrationNumber(blank:false)
 		affiliation(nullable: true)
 		pledge(nullable: true)
+		zone(nullable: true)
     }
 
 	 def beforeValidate(){
@@ -73,8 +75,9 @@ class Voter implements Serializable{
 
 
      String getAddress(){
-        "${this.person.address}"
+        "${this.person.registrationAddress}"
      }
+
 
 	 static totalVotersByPollStation(PollStation pollStation){
 	 	Voter.countByPollStation(pollStation)
@@ -82,6 +85,7 @@ class Voter implements Serializable{
 
     Address getRegistrationAddress(){
         Address.findByPersonAndAddressType(this.person, AddressType.findByName('Registration'))
+
     }
 
     String getEmailAddress(){

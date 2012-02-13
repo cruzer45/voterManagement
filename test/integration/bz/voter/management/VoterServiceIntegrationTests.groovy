@@ -128,4 +128,46 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
     }
 
 
+    void test_search_voters_by_street_should_return_list_of_voters(){
+    	def division = Division.findByName('Albert')
+
+    	assertEquals 7, voterService.searchByStreet(division, 'Adam').size()
+    }
+
+
+    void test_add_voters_to_a_zone(){
+    	def division = Division.findByName('Albert')
+
+    	Zone zone = new Zone(name: 'MyZone').save()
+    	List<Voter> votersList = voterService.searchByStreet(division,'Adam')
+
+    	voterService.addVotersToZone(votersList,zone)
+
+    	assertEquals 7, Voter.findAllByZone(zone).size()
+    }
+
+    void test_remove_voters_from_a_zone(){
+    	Division division = Division.findByName("Albert")
+    	Zone zone = new Zone(name: 'MyZone').save()
+
+    	List<Voter> votersList = voterService.searchByStreet(division, 'Adam')
+    	voterService.addVotersToZone(votersList, zone)
+
+    	assertEquals 7, Voter.findAllByZone(zone).size()
+
+    	def votersToRemoveFromZone = []
+    	int cnt = 1
+    	Voter.findAllByZone(zone).each{
+    		if(cnt<4){
+    			votersToRemoveFromZone.push(it)    			
+    		}
+    		cnt++
+    	}
+
+    	voterService.removeVotersFromZone(votersToRemoveFromZone)
+
+    	assertEquals 4, Voter.findAllByZone(zone).size()
+    }
+
+
 }

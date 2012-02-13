@@ -87,9 +87,21 @@ class VoterService {
 			"where poll.division =:division " +
             "and v.pollStation =:pollStation " 
 
-	/*
+
+    static String SEARCH_BY_STREET_QUERY = "select v " +
+    		"from Voter as v "+
+    		"inner join v.pollStation poll, " +
+    		"Address  address " +
+    		"inner join address.addressType as addressType " +
+    		"where address.street like :street " +
+    		"and poll.division =:division " +
+    		"and addressType.name = 'Registration' " +
+    		"and address.person = v.person " +
+    		"order by v.person.lastName "
+
+	/**
 	Save a new instance of voters.
-	@param params : a map containing the fields for adding a new voter:
+	@param Map : a map containing the fields for adding a new voter:
 	id
 	firstName
 	middleName
@@ -113,7 +125,7 @@ class VoterService {
 
 	@returns an instance of voter
 	
-	*/
+	**/
 
 	def save(def params){
 
@@ -374,6 +386,19 @@ class VoterService {
         return results[0]
     }
 
+
+    /**
+    Search all voters who live in a specified street.
+    @param String street
+    @param Division division
+    @return List<Voter>
+    **/
+    List<Voter> searchByStreet(Division division, String street){
+    	Voter.executeQuery(SEARCH_BY_STREET_QUERY,[
+    		street: ('%' + street + '%'),
+    		division: division])
+    }
+
     
     /**
     Summarize the total registered voters grouped by affiliation.
@@ -451,6 +476,27 @@ class VoterService {
 
 
         return results
+    }
+
+
+    /**
+    Adds a list of voters to a specified Zone.
+    @param List<Voter> list of voters that will be added to a zone.
+    @param Zone
+    **/
+    public void addVotersToZone(List<Voter> votersList, Zone zone){
+    	for(Voter voter : votersList){
+    		voter.zone = zone
+    		voter.save()
+    	}
+
+    }
+
+    public void removeVotersFromZone(List<Voter> votersList){
+    	for(Voter voter : votersList){
+    		voter.zone = null
+    		voter.save()
+    	}
     }
 
 }

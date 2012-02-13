@@ -13,6 +13,7 @@
 				<vbox>
 					<toolbarbutton id="electionButton" label="Election"/>
 					<toolbarbutton id="voterButton" label="Voters"/>
+					<toolbarbutton id="zonesButton" label="Zones" />
 					<toolbarbutton id="userButton" label="Users"/>
 					<toolbarbutton id="systemButton" label="System"/>
 					<toolbarbutton id="passwordButton" label="Change Password"/>

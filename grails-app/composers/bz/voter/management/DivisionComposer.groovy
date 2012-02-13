@@ -12,6 +12,7 @@ class DivisionComposer extends GrailsComposer {
 	def addDivisionButton
 	def divisionCancelButton
 	def divisionSaveButton
+	def districtListbox
 
 	def divisionFormPanel
 
@@ -62,6 +63,7 @@ class DivisionComposer extends GrailsComposer {
 		}
 
 		divisionInstance.name = divisionNameTextbox.getValue()?.trim()?.capitalize()
+		divisionInstance.district = districtListbox.getSelectedItem()?.getValue() ?: District.findByName('Unknown')
 		divisionInstance.validate()
 
 		if(divisionInstance.hasErrors()){
@@ -91,11 +93,15 @@ class DivisionComposer extends GrailsComposer {
 		addDivisionButton.setVisible(false)
 		divisionFormPanel.setVisible(true)
 		divisionNameTextbox.setConstraint('no empty')
+		ListModel divisionModel = new ListModelList(District.list())
+		districtListbox.setModel(divisionModel)
 
 		if(divisionInstance){
+			divisionInstance = Division.load(divisionInstance.id)
 			divisionFormPanel.setTitle(EDIT_TITLE)
 			divisionNameTextbox.setValue("${divisionInstance.name}")
 			divisionIdLabel.setValue("${divisionInstance.id}")
+			divisionModel.addSelection(divisionInstance.district)
 		}else{
 			divisionFormPanel.setTitle(NEW_TITLE)
 		}
@@ -124,6 +130,7 @@ class DivisionComposer extends GrailsComposer {
 				def divisionInstance = _division
 				row{
 					label(value: _division.name)
+					label(value: "${_division.district}")
 					button(label: 'Edit', onClick: {
 						showDivisionForm(divisionInstance)
 					})

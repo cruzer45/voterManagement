@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./zonesListPanel"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <div align="left">
+    	
+    <panel id="zonesListPanel" border="rounded" title="Zones"
+    	apply="bz.voter.management.zone.ListPanelComposer">
+    	
+    	<panelchildren>
+    
+    		<toolbar>
+    			<toolbarbutton id="addZoneButton" image="/images/add.png" tooltip="addZoneToolTip"/>
+    		</toolbar>
+
+    		<grid id="addZoneGrid" visible="false" style="margin: 0.75em" width="30%">
+    			<auxhead>
+            		<auxheader id="zoneFormHeader" label="Add Zone" 
+                           colspan="2" style="font-size: 0.9em" />
+                </auxhead>
+    			<columns>
+    				<column align="right" width="30%"/>
+    				<column />
+    			</columns>
+    			<rows>
+    				<row>
+    					<label value="Zone Name" />
+    					<textbox id="zoneNameTextbox" constraint="no empty"/>
+    				</row>
+    				<row>
+    					<button id="cancelAddButton" label="Cancel"/>
+    					<button id="saveZoneButton" label="Save"/>
+    				</row>
+    			</rows>
+    		</grid>
+
+    		<listbox id="zonesListbox">
+    			<listhead>
+    				<listheader label="Zone"/>    				
+    			</listhead>
+    		</listbox>
+
+
+    		 <vbox>
+    		 	<popup id="addZoneToolTip">
+    		 		Add New Zone.
+    		 	</popup>
+    		</vbox>
+    	</panelchildren>
+
+    </panel>
+
+    </div>
+
+
+</zk>

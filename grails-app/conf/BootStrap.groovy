@@ -38,10 +38,6 @@ class BootStrap {
 			}
 		}
 
-        if(Division.count() == 0){
-            new Division(name: appDivision).save()
-        }
-
 		if(Sex.count() == 0){
 	 		new Sex(name:'Male', code:'M').save()
 	 		new Sex(name:'Female', code:'F').save()
@@ -101,6 +97,12 @@ class BootStrap {
 			new District(name:'Toledo',code:'TO').save()
 			new District(name:'Unknown',code:'UN').save(flush:true)
 		}
+
+
+        if(Division.count() == 0){
+            new Division(name: appDivision, district: District.findByCode('UN')).save()
+        }
+
 
 		if(Municipality.count() == 0){
 			new Municipality(name:'Belmopan',district:District.findByCode('CY')).save()

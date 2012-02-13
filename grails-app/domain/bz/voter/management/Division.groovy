@@ -3,6 +3,7 @@ package bz.voter.management
 class Division implements Serializable{
 
 	String name
+	District district
 
 	String toString() { 
 		name

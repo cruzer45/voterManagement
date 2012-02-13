@@ -11,6 +11,7 @@ class MenuComposer extends GrailsComposer {
 	def signOutButton
 	def systemButton
     def passwordButton
+    def zonesButton
 
 	def center
 	
@@ -50,5 +51,11 @@ class MenuComposer extends GrailsComposer {
      def onClick_passwordButton(){
         center.getChildren().clear()
         Executions.createComponents("password.zul", center,null)
+     }
+
+     def onClick_zonesButton(){
+     	center.getChildren().clear()
+     	Executions.createComponents("/bz/voter/management/zone/listPanel.zul", 
+     		center, null)
      }
 }
