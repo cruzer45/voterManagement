@@ -10,10 +10,10 @@
     xmlns:w="http://www.zkoss.org/2005/zk/client"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <window id="voterMainWindow" border="normal" vflex="max" hflex="max"
+    <window id="voterMainWindow" border="normal" vflex="max" hflex="max" 
         apply="bz.voter.management.display.panel.VoterMainPanelComposer">
 
-        <tabbox tabscroll="true" style="padding:4px 10px 4px 4px" >
+        <tabbox tabscroll="true" style="padding:4px 10px 4px 4px">
 
             <tabs>
                 <tab label="General Information" style="font-size: 6px" />

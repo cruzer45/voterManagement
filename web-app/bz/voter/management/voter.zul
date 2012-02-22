@@ -9,7 +9,7 @@
 
 
     <div id="votersDiv" apply="bz.voter.management.VoterComposer" 
-	 	style="margin:2px;font-size: small" vflex='1'>
+	 	style="margin:2px;font-size: small" vflex='1' align="left">
 				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
 					<panelchildren style="padding:5px">
 					    <toolbar>

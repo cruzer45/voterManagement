@@ -135,6 +135,10 @@ class AddressPanelComposer extends GrailsComposer {
                 phoneNumber3:       registrationAddressPhoneNumber3Textbox.getValue()?.trim()
             ]
             
+            println "params: ${params}"
+
+            println "registrationAddress Municipality Selected: ${registrationAddressMunicipalityListbox.getSelectedItem()?.getValue()}"
+
             def addressInstance = voterFacade.saveAddress(params)
 
             if(addressInstance.hasErrors()){
@@ -213,9 +217,20 @@ class AddressPanelComposer extends GrailsComposer {
 
     def setupMunicipalityListbox(listbox,district,addressMunicipality){
         listbox.getChildren().clear()
+
+
+        if(!district?.equals(addressMunicipality?.district)){
+            listbox.append{
+                listitem(selected: true){
+                    listcell(label: "---")
+                    listcell(label: null)
+                }
+            }
+        }
+        
         for(municipality in utilsFacade.listMunicipalitiesByDistrict(district)){
             listbox.append{
-                def selected = addressMunicipality?.equalsTo(municipality) ?: false
+                def selected = addressMunicipality?.equalsTo(municipality) //?: false
                 listitem(value: municipality, selected: selected){
                     listcell(label: municipality.name)
                     listcell(label: municipality.id)

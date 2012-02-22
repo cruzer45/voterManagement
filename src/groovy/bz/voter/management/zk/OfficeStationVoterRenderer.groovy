@@ -14,7 +14,7 @@ import org.zkoss.zk.ui.Executions
 
 import org.zkoss.zkgrails.*
 
-import bz.voter.management.VoterElection
+import bz.voter.management.*
 
 public class OfficeStationVoterRenderer implements RowRenderer{
     
@@ -24,6 +24,7 @@ public class OfficeStationVoterRenderer implements RowRenderer{
 
     public void render(Row row, java.lang.Object data){
         def _voterElection = data
+        
         def voterElection = _voterElection.voterElection
 
         grid = row.getParent()
@@ -41,8 +42,10 @@ public class OfficeStationVoterRenderer implements RowRenderer{
 				def TIME = /($HOUR):($MINUTE)/
 				def valid = (_voterElection.pickupTime =~ TIME).matches()
 				if(valid){
-                    voterElection.pickupTime = _voterElection.pickupTime
-					voterElection.save(flush:true)
+                    VoterElection.withTransaction{status->
+                       voterElection.pickupTime = _voterElection.pickupTime
+					   voterElection.save(flush:true)
+                    }
 					evt.getTarget().setLabel("Edit")
 					Messagebox.show("Saved Pickup Time Successfully!", "Pickup Time Message",
 						Messagebox.OK, Messagebox.INFORMATION)

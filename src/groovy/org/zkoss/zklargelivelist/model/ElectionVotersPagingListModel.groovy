@@ -1,11 +1,7 @@
 package org.zkoss.zklargelivelist.model;
 
 import java.util.List;
-import bz.voter.management.VoterElection
-import bz.voter.management.VoterElectionService
-import bz.voter.management.Division
-import bz.voter.management.Election
-import bz.voter.management.Pledge
+import bz.voter.management.*
 import bz.voter.management.utils.FilterType
 import bz.voter.management.utils.PickupTimeEnum
 
@@ -210,9 +206,8 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
     @return Map
     **/
     private def doMap(_voterElection){
-        def _addressInstance = _voterElection.voter.registrationAddress
-        def _voter = _voterElection.voter
-        def _registrationAddress = _voter.registrationAddress
+        Voter _voter = Voter.get(_voterElection.voterId)
+        def _registrationAddress = Address.get(_voter.registrationAddress.id)
         def instance = [
             voterElection:      _voterElection,
             voter:              _voter,
@@ -222,16 +217,16 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
             firstName:          _voter.firstName,
             houseNumber:        _registrationAddress?.houseNumber,
             street:             _registrationAddress?.street,
-            municipality:       _registrationAddress?.municipality,
-            sex:                _voter.sex,
+            municipality:       Municipality.get(_registrationAddress?.municipality.id),
+            sex:                Sex.get(_voter.sex.id),
             age:                _voter.age,
             birthDate:          _voter.birthDate,
             pollStation:        _voter.pollStation,
             pollNumber:         _voter.pollStation.pollNumber,
             voted:              _voterElection.voted,
-            affiliation:        _voter.affiliation,
+            affiliation:        Affiliation.get(_voter.affiliation.id),
             pickupTime:         _voterElection.pickupTime,
-            pledge:             _voterElection.pledge
+            pledge:             Pledge.get(_voterElection.pledgeId)
 
         ]
 

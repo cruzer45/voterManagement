@@ -50,6 +50,8 @@ class SummaryDashboardComposer extends GrailsComposer {
     def voterElectionService
     def voterService
 
+    def disabledHours = [ONE,TWO,THREE,FOUR,FIVE,TWENTY,TWENTY_ONE,TWENTY_TWO,TWENTY_THREE,TWENTY_FOUR]
+
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             def electionId = Executions.getCurrent().getArg().electionId
@@ -130,7 +132,7 @@ class SummaryDashboardComposer extends GrailsComposer {
                 label(value: "Hour", class: "gridHeaders")
             }
             for(pledge in pledges){
-                column{
+                column(align:"center"){
                     label(value: "${pledge.name}", class:"gridHeaders")
                 }
             }
@@ -140,27 +142,31 @@ class SummaryDashboardComposer extends GrailsComposer {
         def pledgeRows = []
 
         TwentyFourHourEnum.values().each{hourEnum->
-            def rowRecord = [hour: hourEnum.value(), Yes:0, No:0, Undecided:0]
-            def hourMark = hourEnum.value().split('-')[0]
-            def pledgeRecord = pledgeVotes.findAll{v->
-                v.vote_hour == hourMark.trim().toLong()
-            }
-            for(record in pledgeRecord){
-                switch(record.pledge){
-                    case 'Yes':
-                        rowRecord.Yes = record.votes_count
-                        break
-                    case 'No':
-                        rowRecord.No = record.votes_count
-                        break
-
-                    case 'Undecided':
-                        rowRecord.Undecided = record.votes_count
-                        break
+            
+            if(!disabledHours.contains(hourEnum)){
+            
+                def rowRecord = [hour: hourEnum.value(), Yes:0, No:0, Undecided:0]
+                def hourMark = hourEnum.value().split('-')[0]
+                def pledgeRecord = pledgeVotes.findAll{v->
+                    v.vote_hour == hourMark.trim().toLong()
                 }
-            }
+                for(record in pledgeRecord){
+                    switch(record.pledge){
+                        case 'Yes':
+                            rowRecord.Yes = record.votes_count
+                            break
+                        case 'No':
+                            rowRecord.No = record.votes_count
+                            break
 
-            pledgeRows.push(rowRecord)
+                        case 'Undecided':
+                            rowRecord.Undecided = record.votes_count
+                            break
+                    }
+                }
+
+                pledgeRows.push(rowRecord)
+            }
         }
 
         for(voteRecord in pledgeRows){
@@ -195,29 +201,32 @@ class SummaryDashboardComposer extends GrailsComposer {
 
         def affiliationRows = []
         TwentyFourHourEnum.values().each{hourEnum->
-            def rowRecord = [hour: hourEnum.value(), PUP:0, UDP:0, UNKNOWN:0]
-            def hourMark = hourEnum.value().split('-')[0]
-            def affiliationRecord = affiliationVotes.findAll{v->
-                v.vote_hour == hourMark.trim().toLong()
-            }
-            for(record in affiliationRecord){
-                switch(record.affiliation){
 
-                    case 'PUP':
-                        rowRecord.PUP = record.votes_count
-                        break
-
-                    case 'UDP':
-                        rowRecord.UDP = record.votes_count
-                        break
-
-                    case 'UNKNOWN':
-                        rowRecord.UNKNOWN = record.votes_count
-                        break
+            if(!disabledHours.contains(hourEnum)){
+                def rowRecord = [hour: hourEnum.value(), PUP:0, UDP:0, UNKNOWN:0]
+                def hourMark = hourEnum.value().split('-')[0]
+                def affiliationRecord = affiliationVotes.findAll{v->
+                    v.vote_hour == hourMark.trim().toLong()
                 }
-            }
+                for(record in affiliationRecord){
+                    switch(record.affiliation){
 
-            affiliationRows.push(rowRecord)
+                        case 'PUP':
+                            rowRecord.PUP = record.votes_count
+                            break
+
+                        case 'UDP':
+                            rowRecord.UDP = record.votes_count
+                            break
+
+                        case 'UNKNOWN':
+                            rowRecord.UNKNOWN = record.votes_count
+                            break
+                    }
+                }
+
+                affiliationRows.push(rowRecord)
+            }
 
         }
 

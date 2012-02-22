@@ -13,7 +13,7 @@
         vflex="2" hflex="2"
         apply="bz.voter.management.election.VotesChartComposer">
 
-        <panelchildren vflex="2">
+        <panelchildren>
             <toolbar>
                 <label value="Select Poll Station" />
 	            <listbox id="pollStationListbox" mold="select" rows="1"/>

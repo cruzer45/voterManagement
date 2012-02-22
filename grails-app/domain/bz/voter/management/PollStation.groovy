@@ -8,14 +8,13 @@ class PollStation implements Serializable{
 	static transients = ['name' ]
 
 	String toString(){
-		"${division.name} : ${pollNumber}"
+		"${pollNumber}"
 	}
 
     static constraints = {
 	 	pollNumber(blank: false)
 
     }
-
 
     public boolean equalsTo(other){
         if(!(other instanceof PollStation)){

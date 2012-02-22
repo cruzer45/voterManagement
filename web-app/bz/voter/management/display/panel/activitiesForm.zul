@@ -12,7 +12,6 @@
         width="35%" height="50%" closable="true" position="top,center"
         action="show:slideDown;hide:slideUp" apply="bz.voter.management.display.panel.ActivitiesFormComposer">
 
-
         <grid>
             <columns>
                 <column align="right" width="30%" />

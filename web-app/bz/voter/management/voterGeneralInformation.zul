@@ -57,7 +57,7 @@
 				</row>
 				<row>
 					<label value="Poll Station" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.details.pollStation}" 
+					<label value="@{wndVoterInfo$composer.details.pollStation.pollNumber}" 
 							class="varValue" />
 				</row>
 				<row>

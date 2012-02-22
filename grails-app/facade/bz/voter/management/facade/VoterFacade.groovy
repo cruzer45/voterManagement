@@ -2,20 +2,9 @@ package bz.voter.management.facade
 
 import org.zkoss.zkgrails.*
 
-import bz.voter.management.VoterElection
-import bz.voter.management.Voter
-import bz.voter.management.Person
-import bz.voter.management.Address
-import bz.voter.management.AddressType
-import bz.voter.management.Dependent
+import bz.voter.management.*
 import bz.voter.management.utils.AddressEnum
-import bz.voter.management.Affiliation
-import bz.voter.management.Activity
-import bz.voter.management.Pledge
-import bz.voter.management.Election
 import bz.voter.management.spring.SpringUtil
-import bz.voter.management.Relation
-import bz.voter.management.ActivityType
 
 class VoterFacade {
 
@@ -50,26 +39,27 @@ class VoterFacade {
     @return a map with the basic information
     **/
     def getBasicSummary(VoterElection voterElection ){
-        voterElection = voterElection.merge()
-        def voterInstance = voterElection.voter
-        def electionInstance = voterElection.election
+        def voterInstance = Voter.get(voterElection.voterId)
+        def person = Person.get(voterInstance.person.id)
+        def electionInstance = Election.get(voterElection.electionId)
+        def pollStation = PollStation.get(voterInstance.pollStation.id)
         def details = [            
             firstName: voterInstance.firstName,
             middleName: voterInstance.middleName,
             lastName: voterInstance.lastName,
             birthDate: voterInstance.birthDate.format('dd-MMM-yyyy'),
             age: voterInstance.age,
-            sex: voterInstance.sex,
-            registrationAddress: "${Address.findByPersonAndAddressType(voterInstance.person, AddressType.findByName('Registration'))}",
-            workAddress: "${Address.findByPersonAndAddressType(voterInstance.person, AddressType.findByName('Work'))}",
-            alternateAddress: "${Address.findByPersonAndAddressType(voterInstance.person, AddressType.findByName('Alternate'))}",
-            pollStation: voterInstance.pollStation,
-            pollNumber: voterInstance.pollStation.pollNumber,
             registrationDate: voterInstance.registrationDate.format('dd-MMM-yyyy'),
             registrationNumber: voterInstance.registrationNumber,
+            sex: Sex.get(voterInstance.sex.id),
+            registrationAddress: "${Address.findByPersonAndAddressType(person, AddressType.findByName('Registration'))}",
+            workAddress: "${Address.findByPersonAndAddressType(person, AddressType.findByName('Work'))}",
+            alternateAddress: "${Address.findByPersonAndAddressType(person, AddressType.findByName('Alternate'))}",            
+            pollStation: pollStation,
+            pollNumber: pollStation.pollNumber,            
             voteTime: voterElection.voteTime,
-            affiliation: "${voterInstance.affiliation}",
-            pledge:     "${voterElection.pledge}",
+            affiliation: "${Affiliation.get(voterInstance.affiliation.id)}",
+            pledge:     "${Pledge.get(voterElection.pledgeId)}",
             pickupTime: "${voterElection.pickupTime}"
         ]
 

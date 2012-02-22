@@ -80,6 +80,7 @@ class VotesChartComposer extends GrailsComposer {
                 chartBox.getChildren().clear()
                 votesSummaryRows.getChildren().clear()
                 hourlyCountRows.getChildren().clear()
+                println "goTo displayChart()"
                 displayChart(pollStation, results)
             }else{
                 Messagebox.show("Kindly Select a Poll Station!", "Charts Message", Messagebox.OK,
@@ -116,7 +117,8 @@ class VotesChartComposer extends GrailsComposer {
         chart.appendChild(pie)
         
         hlayout = new Hlayout()
-        chartBox.appendChild(hlayout)
+        //chartBox.appendChild(hlayout)
+        hlayout.appendChild(chartBox)
 
         hlayout.appendChild(chart)
 

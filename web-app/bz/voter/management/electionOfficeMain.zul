@@ -7,17 +7,18 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-	 <div apply="bz.voter.management.ElectionOfficeMainComposer">
+	 <div align="left" vflex="4"
+	 	apply="bz.voter.management.ElectionOfficeMainComposer">
 
-	 	<borderlayout>
+	 	<vlayout>
 
-			<north title="Elections Office"  id="navigationBox">
-			</north>
+			<div vflex="min" id="navigationBox">
+			</div>
 
-			<center id="electionOfficeCenter">
-			</center>
+			<div vflex="3" id="electionOfficeCenter">
+			</div>
 
-		</borderlayout>
+		</vlayout>
 
 	 </div>
 
