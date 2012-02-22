@@ -59,6 +59,7 @@ grails.spring.bean.packages = []
 grails.exceptionresolver.params.exclude = ['password']
 
 files.dir='/usr/local/files/'
+importvoters.serverURL = "http://localhost:9090/import-voters/api/"
 
 // set per-environment serverURL stem for creating absolute links
 environments {
@@ -119,3 +120,8 @@ grails.plugins.springsecurity.filterChain.chainMap = [
 	'/zkau/upload': 'anonymousAuthenticationFilter',
 	'/**': 'JOINED_FILTERS',
 ]
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'bz.voter.management.SecUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'bz.voter.management.SecUserSecRole'
+grails.plugins.springsecurity.authority.className = 'bz.voter.management.SecRole'

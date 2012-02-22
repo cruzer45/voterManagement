@@ -58,7 +58,7 @@ class VoterElectionController {
     def parameters = [:]
     def formatters = [:]
 
-    def list = {
+    def list() {
         def voters
         List fields
         Map labels
@@ -207,7 +207,7 @@ class VoterElectionController {
 
 
 
-    def pickupTime = {
+    def pickupTime() {
         def extension = (params.format == "pdf") ?: "xls"
         redirect(action: "list", 
             params: [
@@ -220,7 +220,7 @@ class VoterElectionController {
                 "pickupTime": params.pickupTime])
     }
 
-    def allVoters = {
+    def allVoters() {
         def extension = (params.format == "pdf") ?: "xls"
         redirect(action: "list", 
             params: [
@@ -233,7 +233,7 @@ class VoterElectionController {
     }
 
 
-    def pledges = {
+    def pledges() {
         def extension = (params.format == "pdf") ?: "xls"
         redirect(action: "list", 
             params: [

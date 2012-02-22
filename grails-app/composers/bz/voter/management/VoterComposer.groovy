@@ -1,6 +1,8 @@
 package bz.voter.management
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zk.ui.*
 import org.zkoss.zk.ui.event.ForwardEvent
 import org.zkoss.zk.ui.event.Event
@@ -23,6 +25,7 @@ import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.zk.VoterRenderer
 import bz.voter.management.utils.FilterType
 import bz.voter.management.utils.VoterListTypeEnum
+import bz.voter.management.spring.SpringUtil
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -50,11 +53,10 @@ class VoterComposer extends GrailsComposer {
 
 	DivisionVotersPagingListModel voterModel = null
 
-	def springSecurityService
-	def voterService
+	def voterService = SpringUtil.getBean('voterService')
 
-    def voterListFacade
-
+    def voterListFacade = SpringUtil.getBean('voterListFacade')
+  
 
     //Identifies the type of voter list we are displaying.
     VoterListTypeEnum voterListType 
@@ -77,7 +79,7 @@ class VoterComposer extends GrailsComposer {
     private EventQueue queue
 
     def afterCompose = { window ->
-	 	if(springSecurityService.isLoggedIn()){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
             division = voterListFacade.getSystemDivision()
 			votersGrid.setRowRenderer(new VoterRenderer())
             //The initial listType:

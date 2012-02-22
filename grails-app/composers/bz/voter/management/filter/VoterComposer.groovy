@@ -1,7 +1,9 @@
 package bz.voter.management.filter
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
 import org.zkoss.zk.ui.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zk.ui.event.Event
 import org.zkoss.zk.ui.event.EventQueue
 import org.zkoss.zk.ui.event.EventQueues

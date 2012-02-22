@@ -6,6 +6,8 @@ import bz.voter.management.Dependent
 import bz.voter.management.Relation
 import bz.voter.management.Person
 import bz.voter.management.Voter
+import bz.voter.management.Relation
+import bz.voter.management.Sex
 
 class DependentFacade {
 
@@ -39,17 +41,18 @@ class DependentFacade {
     </ul>
     **/
     def get(Voter voter, Person person){
-        def dependentInstance = Dependent.get(voter.id, person.id)
+        def personInstance = Person.get(person.id)
+        def dependentInstance = Dependent.get(voter.id, personInstance.id)
+        println "Relation: ${dependentInstance.relationId}"
         def _dependent = [
-            personId:       person.id,
-            firstName:      person.firstName,
-            middleName:     person.middleName,
-            lastName:       person.lastName,
-            birthDate:      person.birthDate,
-            emailAddress:   person.emailAddress,
-            sex:            person.sex,
-            relation:       dependentInstance.relation
-            
+            personId:       personInstance.id,
+            firstName:      personInstance.firstName,
+            middleName:     personInstance.middleName,
+            lastName:       personInstance.lastName,
+            birthDate:      personInstance.birthDate,
+            emailAddress:   personInstance.emailAddress,
+            sex:            Sex.get(personInstance.sex.id),
+            relation:       Relation.get(dependentInstance.relationId)            
         ]
 
         return _dependent

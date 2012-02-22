@@ -1,9 +1,13 @@
 package bz.voter.management
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
 import org.zkoss.zk.ui.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 
 import bz.voter.management.zk.ComposerHelper
+import bz.voter.management.spring.SpringUtil
+
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -15,6 +19,7 @@ class ElectionNavigationComposer extends GrailsComposer {
 	def electionCenter
 	def pollStationsButton
 	def municipalitiesButton
+	def electionNavigationDiv
 
     def afterCompose = { window ->
     }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./electionNavigationDiv"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?page zscriptLanguage="GroovyGrails"?>
 
@@ -7,21 +8,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div apply="bz.voter.management.ElectionNavigationComposer">
+    <toolbar id="electionNavigationDiv"
+    	apply="bz.voter.management.ElectionNavigationComposer">
 
 
-	 	<panel width="100%" border="normal"  title="Elections Menu">
-			<panelchildren style="padding:1px">
-				<vbox>
-					<toolbarbutton id="electionsListButton" label="Elections"/>
-					<toolbarbutton id="divisionsButton" label="Divisions"/>
-					<toolbarbutton id="pollStationsButton" label="Polling Stations"/>
-					<toolbarbutton id="pledgesButton" label="Pledges"/>
-					<toolbarbutton id="municipalitiesButton" label="Municipalities"/>
-				</vbox>
-			</panelchildren>
-		</panel>
-
-    </div>
+	 	
+		<toolbarbutton id="electionsListButton" label="Elections"/>
+		<toolbarbutton id="divisionsButton" label="Divisions"/>
+		<toolbarbutton id="pollStationsButton" label="Polling Stations"/>
+		<toolbarbutton id="pledgesButton" label="Pledges"/>
+		<toolbarbutton id="municipalitiesButton" label="Municipalities"/>
+			
+    </toolbar>
 
 </zk>

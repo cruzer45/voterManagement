@@ -1,7 +1,10 @@
 package bz.voter.management
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import bz.voter.management.importer.* 
+import groovy.json.JsonSlurper
+
+import bz.voter.management.spring.SpringUtil
+//import bz.voter.management.importer.* 
 
 /**
 Service that has utilities to import files with voters into the database.
@@ -9,7 +12,7 @@ Service that has utilities to import files with voters into the database.
 
 class ImportFileService {
 
-	def voterService
+	VoterService voterService = SpringUtil.getBean('voterService')
     def addressService
 
     static transactional = true
@@ -24,9 +27,22 @@ class ImportFileService {
 	**/
     def importVoters(Division division,Election election, String fileName) {
 	 	
-	    fileName = ConfigurationHolder.config.files.dir + fileName
-        VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
-        def votersMapList = excelImporter.getVoters()
+	    //fileName = ConfigurationHolder.config.files.dir + fileName
+        //VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
+
+        //def votersMapList = excelImporter.getVoters()
+        def votersMapList = [:]
+
+        withRest(id: "importService", uri: ConfigurationHolder.config.importvoters.serverURL ){
+        	auth.basic('admin', 'p4ssw0rd')
+        	get(path: "importVoters/${fileName}"){resp,json->
+        		println "\njson: ${json}"
+        		votersMapList  = new JsonSlurper().parseText(json.toString())
+        	}
+
+        	println "\n\nvotersMapList: ${votersMapList}"        	
+        	
+        }
 
 		def numberOfVoters = 0
 
@@ -55,7 +71,7 @@ class ImportFileService {
 				voterParams.pledge = Pledge.findByName(voterParams.pledge) ?: Pledge.findByCode('U')
 
 				voterParams.address = addressParams
-				if(!voterService) voterService = new VoterService()
+				//if(!voterService) voterService = new VoterService()
 
 				transactionCount += 1
 

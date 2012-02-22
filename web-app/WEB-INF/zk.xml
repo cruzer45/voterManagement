@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zk>
+    <system-config>
+        <ui-factory-class>org.zkoss.zk.grails.ui.GrailsComposerFactory</ui-factory-class>
+	 	<max-upload-size>-1</max-upload-size>
+    </system-config>
     <listener>
         <description>ThreadLocal Synchronization Listener</description>
         <listener-class>org.zkoss.zkplus.util.ThreadLocalListener</listener-class>
     </listener>
-	 <listener>
-	 	<description>Hibernate thread session context</description>
-		<listener-class>org.zkoss.zkplus.spring.SpringTransactionSynchronizationListener</listener-class>
-	 </listener>
     <zscript-config>
         <language-name>GroovyGrails</language-name>
         <interpreter-class>
@@ -19,7 +19,6 @@
             <value>
                 org.springframework.transaction.support.TransactionSynchronizationManager=resources,
                 synchronizations,currentTransactionName,currentTransactionReadOnly,actualTransactionActive;
-                org.springframework.orm.hibernate3.SessionFactoryUtils=deferredCloseHolder;
                 org.springframework.transaction.interceptor.TransactionAspectSupport=transactionInfoHolder;
                 org.springframework.web.context.request.RequestContextHolder=requestAttributesHolder,inheritableRequestAttributesHolder;
             </value>
@@ -28,7 +27,4 @@
         <name>org.zkoss.zk.ui.metainfo.page.Loader.class</name>
         <value>org.zkoss.web.util.resource.CustomContentLoader</value>
     </library-property>
-	 <system-config>
-	 	<max-upload-size>-1</max-upload-size>
-	 </system-config>
 </zk>

@@ -33,7 +33,7 @@ class PersonController {
     def excelParams = ["column.widths": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]
 
 
-	 def list = {
+	 def list() {
 	 	if(params?.format && params.format != 'html'){
             def voters
 			response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
@@ -106,7 +106,7 @@ class PersonController {
 
 
 
-	 def export = {
+	 def export() {
         def listType = params.listType
         def extension = (params.format == "pdf") ? "pdf" : "xls"
         def format = params.format

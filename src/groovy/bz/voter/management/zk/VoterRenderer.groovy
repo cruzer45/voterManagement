@@ -53,4 +53,10 @@ public class VoterRenderer implements RowRenderer{
 		row.getChildren().add(manageButton)
 	}
 
+
+	public void render(Row row, java.lang.Object data, int pageSize){
+    	render(row, data)
+    }
+
+
 }

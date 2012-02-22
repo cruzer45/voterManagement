@@ -12,6 +12,10 @@ class Municipality implements Serializable{
     static constraints = {
     }
 
+    static mapping = {
+    	district fetch: 'join'
+    }
+
 	 def beforeValidate(){
 	 	name = name?.trim()?.capitalize()
 	 }

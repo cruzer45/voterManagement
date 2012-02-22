@@ -34,7 +34,10 @@ class ActivityFacade {
     @return ActivityType
     **/
     def saveActivity(activityName){
-        def activityType = (ActivityType.findByName(activityName)) ?: new ActivityType(name: activityName).save()
+        def activityType
+        ActivityType.withTransaction{status->
+            activityType = (ActivityType.findByName(activityName)) ?: new ActivityType(name: activityName).save()
+        }
 
         return activityType
     }

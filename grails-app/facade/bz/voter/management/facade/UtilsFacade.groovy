@@ -13,12 +13,12 @@ import bz.voter.management.PollStation
 import bz.voter.management.Affiliation
 import bz.voter.management.Pledge
 import bz.voter.management.Election
+import bz.voter.management.spring.SpringUtil
 
 class UtilsFacade {
 
     def sessionFactory
-
-
+   
     /**
     Lists sex values.
     @return List of sex values.

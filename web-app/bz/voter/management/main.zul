@@ -102,7 +102,7 @@
 			</north>
 			<west title="Sidebar" id="w" flex="true" collapsible="true"  width="150px">
 				<vlayout style="padding: 8px;" >
-					<include src="menu.zul"/>
+					<include src="/bz/voter/management/menu.zul"/>
 				</vlayout>
 			</west>
 			<center id="centerArea" vflex="1">

@@ -181,7 +181,7 @@ class BootStrap {
 
 
 	 def populateDataFromXLSForProduction(String divisionName, String fileName){
-      VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
+      /*VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
       def votersMapList = importer3.getVoters()
 		def division = Division.findByName(divisionName) ?: new Division(name:divisionName).save()
         
@@ -202,11 +202,11 @@ class BootStrap {
 
 				voterParams.address = addressParams
 				voterService.add(voterParams)
-       } 
+       }*/ 
 	 }
 
 	 def populateDataFromXLSForDev(){
-      new VoterExcelImporter(fileName);
+      //new VoterExcelImporter(fileName);
 	 }
 
 }

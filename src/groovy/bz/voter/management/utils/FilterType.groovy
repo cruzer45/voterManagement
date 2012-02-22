@@ -1,6 +1,6 @@
 package bz.voter.management.utils
 
-public enum FilterType {
+enum FilterType {
     PLEDGE('Pledge'),
     AFFILIATION('Affiliation'),
     PICKUP_TIME('Pickup Time'),
@@ -10,6 +10,10 @@ public enum FilterType {
 
     FilterType(String value){
         this.name = value
+    }
+
+    public String value(){
+    	name
     }
 }
 

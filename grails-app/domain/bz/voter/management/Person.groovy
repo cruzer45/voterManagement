@@ -24,6 +24,11 @@ class Person implements Serializable{
         emailAddress(email:true, nullable:true)
     }
 
+    static mapping = {
+        sex fetch: 'join'
+        ethnicity fetch: 'join'
+    }
+
     def beforeInsert(){
         this.alive = true
     }

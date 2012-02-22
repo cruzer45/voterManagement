@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class SecRole implements Serializable{
+class SecRole {
 
 	String authority
 

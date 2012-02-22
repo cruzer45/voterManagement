@@ -8,7 +8,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <panel id="activitiesPanel" title="Activities" vflex="1" hflex=""
+    <panel id="activitiesPanel" title="Activities" vflex="1" hflex="1"
         border="normal" apply="bz.voter.management.display.panel.ActivitiesComposer">
 
         <panelchildren>
@@ -16,7 +16,7 @@
                 <button label="Add Activity" id="addActivityBtn" />
             </toolbar>
 
-            <grid mold="paging" pageSize="10">
+            <grid mold="paging" pageSize="10" vflex="1">
                 <columns>
                     <column label="Activity" />
                     <column label="Date" />
@@ -24,7 +24,7 @@
                     <column />
                     <column />
                 </columns>
-                <rows id="activitiesRows" >
+                <rows id="activitiesRows" vflex="1" >
                 </rows>
             </grid>
 

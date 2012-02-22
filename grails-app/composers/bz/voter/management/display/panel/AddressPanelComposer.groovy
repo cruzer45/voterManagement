@@ -1,11 +1,17 @@
 package bz.voter.management.display.panel
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
+
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zk.ui.Executions
 import org.zkoss.zul.Messagebox
+import org.zkoss.zkplus.spring.SpringUtil
 
 import bz.voter.management.zk.ComposerHelper
 import static bz.voter.management.utils.AddressEnum.*
+//import bz.voter.management.spring.SpringUtil
+import bz.voter.management.*
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -14,6 +20,7 @@ class AddressPanelComposer extends GrailsComposer {
     def voterFacade
     def utilsFacade
     def voter
+    def addressService = SpringUtil.getBean('addressService')
 
     def registrationAddressHouseNumberTextbox
     def registrationAddressStreetTextbox
@@ -118,7 +125,10 @@ class AddressPanelComposer extends GrailsComposer {
                 id:                 registrationAddress?.id,
                 houseNumber:        registrationAddressHouseNumberTextbox.getValue()?.trim(),
                 street:             registrationAddressStreetTextbox.getValue()?.trim(),
-                addressType:        REGISTRATION,
+                //addressType:        REGISTRATION,
+                addressType:        AddressType.findByName("Registration"),
+                address:            registrationAddress,
+                person:              voter.person,
                 municipality:       registrationAddressMunicipalityListbox.getSelectedItem()?.getValue(),
                 phoneNumber1:       registrationAddressPhoneNumber1Textbox.getValue()?.trim(),
                 phoneNumber2:       registrationAddressPhoneNumber2Textbox.getValue()?.trim(),
@@ -145,7 +155,9 @@ class AddressPanelComposer extends GrailsComposer {
 	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params =[
                 id:             workAddress?.id,
-                addressType:    WORK,
+                address:        workAddress,
+                person:         voter.person,
+                addressType:    AddressType.findByName('Work'),
                 houseNumber:    workAddressHouseNumberTextbox.getValue()?.trim(),
                 street:         workAddressStreetTextbox.getValue()?.trim(),
                 municipality:   workAddressMunicipalityListbox.getSelectedItem()?.getValue(),
@@ -173,7 +185,9 @@ class AddressPanelComposer extends GrailsComposer {
 	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params =[
                 id:             alternateAddress?.id,
-                addressType:    ALTERNATE,
+                address:        alternateAddress,
+                addressType:    AddressType.findByName('Alternate'),
+                person:         voter.person,
                 houseNumber:    alternateAddressHouseNumberTextbox.getValue()?.trim(),
                 street:         alternateAddressStreetTextbox.getValue()?.trim(),
                 municipality:   alternateAddressMunicipalityListbox.getSelectedItem()?.getValue(),

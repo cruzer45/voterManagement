@@ -156,7 +156,7 @@ class VoterService {
 			
 		}else{
 			voterInstance.person = personInstance
-			voterInstance.registrationDate = params.registrationDate ?: voterInstance.registrationDate
+			voterInstance.registrationDate = new Date().parse('yyyy-MM-dd',params.registrationDate) ?: voterInstance.registrationDate
 			voterInstance.registrationNumber = params.registrationNumber ?: voterInstance.registrationNumber
 			voterInstance.identificationType = params.identificationType ?: voterInstance.identificationType
 			voterInstance.pollStation = params.pollStation ?: voterInstance.pollStation
@@ -181,7 +181,7 @@ class VoterService {
 	}
 
 
-	def add(HashMap params,Election election, boolean flush){
+	public Voter add(HashMap params,Election election, boolean flush){
 		def voterInstance = save(params)
 
 		if(!voterInstance.hasErrors()){

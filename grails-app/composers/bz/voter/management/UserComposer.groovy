@@ -1,9 +1,12 @@
 package bz.voter.management
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zul.*
 
 import bz.voter.management.zk.ComposerHelper
+import bz.voter.management.spring.SpringUtil
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -34,8 +37,7 @@ class UserComposer extends GrailsComposer {
 	def errorMessages
 	def messageSource
 
-	def springSecurityService
-
+	def springSecurityService = SpringUtil.getBean('springSecurityService')
 
 	private static NEW_TITLE = "New User"
 	private static EDIT_TITLE = "Edit User"

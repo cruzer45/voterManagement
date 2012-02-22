@@ -13,7 +13,7 @@
 
 			<panel title="Voters List" style="padding: 4px " 
 				border="normal" vflex='1'>
-				<panelchildren style="padding:5px" vflex='1'>
+				<panelchildren style="padding:5px" >
 					<toolbar>
                         <cell>
 						    <textbox id="searchTextbox" />

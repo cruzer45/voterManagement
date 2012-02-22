@@ -16,8 +16,7 @@ class VoterElection implements Serializable{
 		voteTime(nullable: true)
     }
 
-
-	 boolean equals(other){
+	boolean equals(other){
 	 	if(!(other instanceof VoterElection)){
 			return false
 		}
@@ -69,6 +68,9 @@ class VoterElection implements Serializable{
 	 static mapping = {
 	 	id composite: ['voter','election']
 		version false
+		pledge fetch:'join'
+    	election fetch:'join'
+    	voter fetch:'join'
 	 }
 
 	/**

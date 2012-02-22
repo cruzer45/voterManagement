@@ -12,15 +12,20 @@ import bz.voter.management.utils.AddressEnum
 import bz.voter.management.Affiliation
 import bz.voter.management.Activity
 import bz.voter.management.Pledge
+import bz.voter.management.Election
+import bz.voter.management.spring.SpringUtil
+import bz.voter.management.Relation
+import bz.voter.management.ActivityType
 
 class VoterFacade {
 
     Voter voter
 
-	 def voterService
-     def personService
+	def voterService
+    def personService = SpringUtil.getBean('personService')
+    def addressService = SpringUtil.getBean('addressService')
 
-	 def sessionFactory
+	def sessionFactory
 
     List<Voter> getVoters() {
         Voter.list()
@@ -48,7 +53,7 @@ class VoterFacade {
         voterElection = voterElection.merge()
         def voterInstance = voterElection.voter
         def electionInstance = voterElection.election
-        def details = [
+        def details = [            
             firstName: voterInstance.firstName,
             middleName: voterInstance.middleName,
             lastName: voterInstance.lastName,
@@ -88,7 +93,8 @@ class VoterFacade {
     </ol>
     **/
     def getBasicInformation(){
-        this.voter = Voter.load(voter.id)
+        this.voter = Voter.get(voter.id)
+
         def basicInfo = [
             firstName: voter.firstName,
             middleName: voter.middleName,
@@ -108,7 +114,7 @@ class VoterFacade {
 
     /**
     Saves a voter's basic information.
-    @param a map with the basci information to save:
+    @param a map with the basic information to save:
     <ul>
         <li>firstName</li>
         <li>middleName</li>
@@ -122,32 +128,17 @@ class VoterFacade {
     </ul>
     **/
     def saveBasicInformation(params){
-        voter = Voter.load(voter.id)
-        def person = voter.person
-        
-        person.firstName = params.firstName ?: person.firstName
-        person.middleName = params.middleName ?: person.middleName
-        person.lastName = params.lastName ?: person.lastName
-        person.birthDate = params.birthDate ?: person.birthDate
-        person.sex = params.sex ?: person.sex
-        person.alive = params.alive
-        person.emailAddress = params.emailAddress
+        voter = Voter.get(voter.id)
+        def person = Person.get(voter.person.id) 
+        params.person = person
 
-        person.validate()
+        person = personService.saveBasicInformation(params)      
 
-        if(person.hasErrors()){
-            log.error person.retrieveErrors()
-        }else{
-            person.save()
-
-            if(params.affiliation && (params.affiliation instanceof Affiliation)){
-                voter.affiliation = params.affiliation
-                voter.save()
-            }
+        Voter.withTransaction{status->
+            voter.affiliation = Affiliation.get(params.affiliation.id)
+            voter.save()
         }
-
-        flushSession()
-
+       
         return person
     }
 
@@ -168,7 +159,7 @@ class VoterFacade {
     </ul>
     **/
     def getAddress(AddressEnum addressType){
-        this.voter = Voter.load(voter.id)
+        this.voter = Voter.get(voter.id)
         def person = voter.person
         def addressInstance
 
@@ -216,44 +207,23 @@ class VoterFacade {
     </ul>
     **/
     def saveAddress(params){
-        def addressInstance = Address.load(params.id) ?: new Address()
+        def addressInstance = Address.get(params.id) ?: new Address()
+        def data = [
+            id: params.id,
+            address: addressInstance,
+            houseNumber: params.houseNumber ?: addressInstance?.houseNumber,
+            street: params.street ?: addressInstance?.street,
+            municipality: params.municipality ?: addressInstance?.municipality,
+            phoneNumber1: params.phoneNumber1 ?: addressInstance?.phoneNumber1,
+            phoneNumber2: params.phoneNumber2 ?: addressInstance?.phoneNumber2,
+            phoneNumber3: params.phoneNumber3 ?: addressInstance?.phoneNumber3
+        ]
 
-        addressInstance.houseNumber = params.houseNumber ?: addressInstance?.houseNumber
-        addressInstance.street = params.street ?: addressInstance?.street
-        addressInstance.municipality = params.municipality ?: addressInstance?.municipality
-        addressInstance.phoneNumber1 = params.phoneNumber1 ?: addressInstance?.phoneNumber1
-        addressInstance.phoneNumber2 = params.phoneNumber2 ?: addressInstance?.phoneNumber2
-        addressInstance.phoneNumber3 = params.phoneNumber3 ?: addressInstance?.phoneNumber3
-
-        if(!addressInstance.id){
-            this.voter = Voter.load(voter.id)
-            def addressType
-            switch(params.addressType){
-                case AddressEnum.ALTERNATE:
-                    addressType = AddressType.findByName('Alternate')
-                    break
-                case AddressEnum.WORK:
-                    addressType = AddressType.findByName('Work')
-                    break
-
-                case AddressEnum.REGISTRATION:
-                    addressType = AddressType.findByName("Registration")
-                    break
-            }
-
-            addressInstance.addressType = addressType
-            addressInstance.person = voter.person
-        }
-
-        addressInstance.validate()
-
-        if(addressInstance.hasErrors()){
-            log.error addressInstance.retrieveErrors()
-        }else{
-            addressInstance.save()
-        }
-
-        flushSession()
+       
+        data.addressType = params.addressType
+        data.person = Person.get(voter.person.id)
+       
+        addressInstance = addressService.save(data)
 
         return addressInstance
     }
@@ -269,7 +239,7 @@ class VoterFacade {
     </ul>
     **/
     def getRegistrationInformation(){
-        this.voter = Voter.load(voter.id)
+        this.voter = Voter.get(voter.id)
         def information = [
             registrationNumber: voter.registrationNumber,
             registrationDate: voter.registrationDate,
@@ -293,20 +263,24 @@ class VoterFacade {
     @return Voter instance.
     **/
     def saveRegistrationInformation(params){
-        this.voter = Voter.load(voter.id)
+        this.voter = Voter.get(voter.id)
 
-        voter.registrationNumber = params.registrationNumber ?: voter.registrationNumber
-        voter.registrationDate = params.registrationDate ?: voter.registrationDate
-        voter.pollStation = params.pollStation ?: voter.pollStation
+        Voter.withTransaction{status->
+
+            voter.registrationNumber = params.registrationNumber ?: voter.registrationNumber
+            voter.registrationDate = params.registrationDate ?: voter.registrationDate
+            voter.pollStation = params.pollStation ?: voter.pollStation
 
 
-        voter.validate()
+            voter.validate()
 
-        if(voter.hasErrors()){
-            log.error voter.retrieveErrors()
-        }else{
-            voter.save()
-        }
+            if(voter.hasErrors()){
+                log.error voter.retrieveErrors()
+            }else{
+                voter.save()
+            }
+
+        }   
 
 
         return voter
@@ -352,7 +326,7 @@ class VoterFacade {
     @return An instance of person.
     **/
     def saveContactInformation(params){
-        this.voter = Voter.load(voter.id)
+        this.voter = Voter.get(voter.id)
         def personInstance = voter.person
 
         personInstance.homePhone        = params.homePhone ?: personInstance.homePhone
@@ -390,10 +364,10 @@ class VoterFacade {
     **/
     def getDependents(voter){
         def dependents = []
-        voter = Voter.load(voter.id)
+        voter = Voter.get(voter.id)
         
         for(voterDependent in Dependent.getByVoter(voter)){
-            def dependent = voterDependent.person
+            def dependent = Person.get(voterDependent.personId)
             def _dependent = [
                 id:             dependent.id,
                 firstName:      dependent.firstName,
@@ -403,7 +377,7 @@ class VoterFacade {
                 age:            dependent.age,
                 emailAddress:   dependent.emailAddress,
                 sex:            dependent.sex,
-                relation:       voterDependent.relation
+                relation:       Relation.get(voterDependent.relationId)
             ]
 
             dependents.push(_dependent)
@@ -430,19 +404,22 @@ class VoterFacade {
     @return Dependent 
     **/
     def saveDependent(params){
-        this.voter = Voter.load(voter.id)
-        def person = Person.load(params.id)
+        this.voter = Voter.get(voter.id)
+        def dependentInstance
+        
         params.person = Person.get(params.id) 
 
-        def personInstance = personService.save(params)
-        def dependentInstance
+        Person.withTransaction{status->
 
-        if(!personInstance.hasErrors()){
-            dependentInstance = Dependent.get(voter.id, personInstance.id)
-            if(!dependentInstance?.voter){
-                dependentInstance = Dependent.create(voter,personInstance,params.relation,true)
-            }else{
-                dependentInstance.relation = params.relation
+            def personInstance = personService.saveBasicInformation(params)
+            
+            if(!personInstance.hasErrors()){
+                dependentInstance = Dependent.get(voter.id, personInstance.id)
+                if(!dependentInstance?.voter){
+                    dependentInstance = Dependent.create(voter,personInstance,params.relation,true)
+                }else{
+                    dependentInstance.relation = params.relation
+                }
             }
         }
         
@@ -458,9 +435,12 @@ class VoterFacade {
     @return true if successful deletion.
     **/
     def deleteDependent(id){
-        voter = Voter.load(voter.id)
-        def person = Person.load(id)
-        Dependent.remove(voter,person,true)
+        voter = Voter.get(voter.id)
+        def person = Person.get(id)
+        Dependent.withTransaction{status->
+
+            Dependent.remove(voter,person,true)
+        }
     }
 
 
@@ -470,17 +450,17 @@ class VoterFacade {
     @return List of activities
     **/
     def getActivities(){
-        voter = Voter.load(voter.id)
+        voter = Voter.get(voter.id)
 
         def activities = []
 
         for(activity in Activity.findAllByVoter(voter)){
             def data = [
                 activityId:     activity.id,
-                activityType:   activity.activityType,
+                activityType:   ActivityType.get(activity.activityTypeId),
                 notes:          activity.notes,
                 date:           activity.activityDate,
-                voter:          activity.voter
+                voter:          Voter.get(activity.voterId)
             ]
 
             activities.push(data)
@@ -505,22 +485,25 @@ class VoterFacade {
     **/
     def saveActivity(params){
 
-        voter = Voter.load(params.voterId.toLong())
+        voter = Voter.get(params.voterId.toLong())
         def activity = Activity.get(params.activityId?.toLong())  ?: new Activity()
 
-        activity.voter = voter
-        activity.activityType = params.activityType ?: activity?.activityType
-        activity.activityDate = params.activityDate ?: activity?.activityDate
-        activity.notes = params.notes ?: activity?.notes
+        Activity.withTransaction{status->
 
-        activity.validate()
-        if(activity.hasErrors()){
-            log.error activity.retrieveErrors()
-        }else{
-            activity.save()
+            activity.voter = voter
+            activity.activityType = params.activityType ?: activity?.activityType
+            activity.activityDate = params.activityDate ?: activity?.activityDate
+            activity.notes = params.notes ?: activity?.notes
+
+            activity.validate()
+            if(activity.hasErrors()){
+                log.error activity.retrieveErrors()
+            }else{
+                activity.save()
+                flushSession()
+            }
+
         }
-
-        flushSession()
 
         return activity
 
@@ -530,8 +513,10 @@ class VoterFacade {
 
     def deleteActivity(activityId){
         def activity = Activity.get(activityId?.toLong())
-        if(activity){
-            activity.delete()
+        Activity.withTransaction{status->
+            if(activity){
+                activity.delete()
+            }
         }
 
         flushSession()
@@ -548,14 +533,15 @@ class VoterFacade {
     </ul>
     **/
     def getPledges(){
-        voter = Voter.load(voter.id)
+        voter = Voter.get(voter.id)
 
         def results = [] 
 
-        for(ve in VoterElection.findAllByVoter(voter)){
+        for(ve in VoterElection.findAllByVoter(voter,[fetch:'eager'])){
+            
             def data = [
-                election: ve.election,
-                pledge:   ve.pledge
+                election: Election.get(ve.electionId.toInteger()),
+                pledge:   Pledge.get(ve.pledgeId.toInteger())
             ]
 
             results.push(data)
@@ -575,18 +561,19 @@ class VoterFacade {
 
         def voterElection = VoterElection.get(this.voter?.id, election?.id)
 
-        if(voterElection instanceof VoterElection){
-            voterElection.pledge = pledge
-            voterElection.validate()
+        VoterElection.withTransaction{status->
 
-            if(voterElection.hasErrors()){
-                log.error voterElection.retrieveErrors()
-            }else{
-                voterElection.save()
+            if(voterElection instanceof VoterElection){
+                voterElection.pledge = pledge
+                voterElection.validate()
+
+                if(voterElection.hasErrors()){
+                    log.error voterElection.retrieveErrors()
+                }else{
+                    voterElection.save()
+                }
             }
         }
-
-        flushSession()
 
         return voterElection
     }
@@ -597,10 +584,10 @@ class VoterFacade {
     @param Election
     @return Pledge
     **/
-    def getPledge(election){
+    Pledge getPledge(election){
         def voterElection = VoterElection.get(voter?.id, election?.id)
 
-        return voterElection?.pledge
+        return Pledge.get(voterElection?.pledgeId)
     }
 
 

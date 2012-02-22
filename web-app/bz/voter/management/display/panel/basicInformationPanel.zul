@@ -8,8 +8,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <panel id="basicInformationPanel" title="Basic Information" border="normal"
-        vflex="1" hflex="1" 
+    <panel id="basicInformationPanel" title="Basic Information" border="rounded"
+        vflex="1" hflex="2" 
         apply="bz.voter.management.display.panel.BasicInformationPanelComposer">
 
         <panelchildren>

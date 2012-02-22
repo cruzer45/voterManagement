@@ -74,5 +74,8 @@ class Dependent implements Serializable{
 	static mapping = {
 		id composite: ['voter', 'person']
 		version false
+        relation fetch:'join'
+        voter  fetch:'join'
+        person fetch:'join'
 	}
 }

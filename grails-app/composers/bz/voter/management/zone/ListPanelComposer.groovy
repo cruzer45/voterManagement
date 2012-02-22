@@ -1,8 +1,10 @@
 package bz.voter.management.zone
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
 import org.zkoss.zul.*
 import org.zkoss.zk.ui.event.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 
 import bz.voter.management.Zone
 import bz.voter.management.zk.ComposerHelper

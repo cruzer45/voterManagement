@@ -1,6 +1,8 @@
 package bz.voter.management
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zul.*
 import org.zkoss.zk.ui.*
 
@@ -18,6 +20,7 @@ class ElectionOfficeMainComposer extends GrailsComposer {
 			electionOfficeCenter.getChildren().clear()
 			navigationBox.getChildren().clear()
 			def electionId = Executions.getCurrent().getArg().id
+			electionOfficeCenter.getChildren().clear()
 			Executions.createComponents("electionOfficeVoters.zul",
 				electionOfficeCenter,[id: electionId])
 			Executions.createComponents("electionOfficeNavigation.zul",

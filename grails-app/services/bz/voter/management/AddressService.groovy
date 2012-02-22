@@ -33,15 +33,10 @@ class AddressService {
 	@return Instance of address.
 	**/
 	 def save(def params){
-		def addressInstance
+		def addressInstance = params.id ? Address.get(params.id.toLong()) : new Address()		
 
-		if(params.address?.id){
-			addressInstance = params.address
-		}else{
-			addressInstance = new Address()
-		}
 
-		try{
+		//try{
 			addressInstance.houseNumber = params.houseNumber ?: addressInstance.houseNumber
 			addressInstance.street = params.street ?: addressInstance.street
 			addressInstance.municipality = params.municipality ?: addressInstance.municipality
@@ -50,23 +45,21 @@ class AddressService {
             addressInstance.phoneNumber2 = params.phoneNumber2 ?: addressInstance.phoneNumber2
             addressInstance.phoneNumber3 = params.phoneNumber3 ?: addressInstance.phoneNumber3
             addressInstance.person = params.person ?: addressInstance.person
-			addressInstance.validate()
-		}catch(e){
-			log.error "An exception was thrown : ${e.printStackTrace()}"
-			return addressInstance
-		}
 
-
-		if(addressInstance.hasErrors()){
-			log.error "An error occurred while saving address."
-			for(error in addressInstance.errors.allErrors){
-				log.error error
-			}
-		}else{
-			addressInstance.save()
-			log.info 'Saved address: ' + addressInstance
-		}
-
+         
+            Address.withTransaction{status->
+            	addressInstance.validate()
+				if(addressInstance.hasErrors()){
+					log.error "An error occurred while saving address."
+					for(error in addressInstance.errors.allErrors){
+						log.error error
+					}
+				}else{
+					addressInstance.save()
+					log.info 'Saved address: ' + addressInstance
+				}
+            }
+	
 
 		return addressInstance
 		

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./electionPanel"?>
 <?page zscriptLanguage="GroovyGrails"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul"
@@ -7,19 +8,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div apply="bz.voter.management.ElectionComposer" >
-	 	<borderlayout>
-			<center id="electionCenter">
-				<include src="electionCrudPanel.zul" />
-			</center>
+    <div align="left">
 
-			<east title="Elections Sidebar" collapsible="true" flex="true">
-				<vlayout style="padding: 4px;">
-					<include src="electionNavigation.zul" />
-				</vlayout>
-			</east>
+    <panel id="electionPanel" apply="bz.voter.management.ElectionComposer" >
+    	<panelchildren>
+    		<include src="/bz/voter/management/electionNavigation.zul" />
+    		
+			<div id="electionCenter">
+				<include mode="instant" src="/bz/voter/management/electionCrudPanel.zul" />
+			</div>			
 
-		</borderlayout>
+		</panelchildren>
+
+    </panel>
 
     </div>
 

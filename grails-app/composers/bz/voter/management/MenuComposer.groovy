@@ -1,6 +1,8 @@
 package bz.voter.management
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zk.ui.*
 
 class MenuComposer extends GrailsComposer {
@@ -21,7 +23,8 @@ class MenuComposer extends GrailsComposer {
 
 	 def onClick_electionButton(){
 	 	center.getChildren().clear()
-		Executions.createComponents("election.zul", center, null)
+	 	println "Clicked on Election Button"
+		Executions.createComponents("/bz/voter/management/election.zul", center, null)
 	 	
 	 }
 

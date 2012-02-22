@@ -25,6 +25,15 @@ class Voter implements Serializable{
 		zone(nullable: true)
     }
 
+      static mapping = {
+        person fetch: 'join'
+        identificationType fetch: 'join'
+        pollStation fetch: 'join'
+        pledge fetch: 'join'
+        affiliation fetch: 'join'
+        zone fetch: 'join'
+    }
+
 	 def beforeValidate(){
 	 	registrationNumber = registrationNumber?.trim()
 	 }

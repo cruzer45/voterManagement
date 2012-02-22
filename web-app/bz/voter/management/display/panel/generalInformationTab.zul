@@ -14,7 +14,7 @@
         <vlayout>
 
             <hlayout>
-                <div id="basicInformationDiv" />
+                <div id="basicInformationDiv" align="center" hflex="2"/>
             </hlayout>
 
         </vlayout>

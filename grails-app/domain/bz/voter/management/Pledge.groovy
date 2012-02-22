@@ -19,4 +19,12 @@ class Pledge implements Serializable{
 		code = code?.trim()?.capitalize()
 	}
 
+	public boolean equals(other){
+        if(!(other instanceof Pledge)){
+            return false
+        }
+
+        other.id == this.id
+    }
+
 }

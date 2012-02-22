@@ -23,6 +23,12 @@ class Address implements Serializable{
         phoneNumber3(nullable:true)
     }
 
+    static mapping = {
+    	person fetch: 'join'
+    	municipality fetch: 'join'
+    	addressType fetch: 'join'
+    }
+
 
 	 def beforeValidate(){
 	 	street = street?.trim()?.capitalize()

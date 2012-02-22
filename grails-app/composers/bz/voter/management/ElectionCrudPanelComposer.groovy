@@ -1,18 +1,24 @@
 package bz.voter.management
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
 import org.zkoss.zul.*
 import org.zkoss.zk.ui.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 
 import bz.voter.management.zk.ComposerHelper
 
+import bz.voter.management.spring.SpringUtil
+
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 
 class ElectionCrudPanelComposer extends GrailsComposer {
 
 	def addElectionButton
 	def cancelElectionButton
 	def saveElectionButton
+	def electionCrudDiv
 
 	def electionFormPanel
 
@@ -27,14 +33,17 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 	def electionsListRows
 
 	def errorMessages
-	def messageSource
+	def messageSource = SpringUtil.getBean('messageSource')
 
 	def election
 
 	def center
 
-	def springSecurityService
+	def springSecurityService = SpringUtil.getBean('springSecurityService')
+	def electionService = SpringUtil.getBean('electionService')
 	def voterElectionService
+
+	def electionFacade = SpringUtil.getBean('electionFacade')
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
@@ -46,7 +55,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 
 	 def onClick_addElectionButton(){
-	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){	 		
 			showElectionFormGrid(null)
 		}else{
 			ComposerHelper.permissionDeniedBox()
@@ -62,18 +71,15 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 	 def onClick_saveElectionButton(){
 	 if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 	
+		def electionMap = [
+			id: electionIdLabel.getValue(),
+			year: yearTextbox.getValue()?.trim()?.toInteger(),
+			electionDate:  electionDatebox.getValue(),
+			electionType: ElectionType.get(electionTypeListbox.getSelectedItem()?.getLastChild()?.getLabel()) ?: null
+		]
 
-	 	def electionInstance
-		if(electionIdLabel.getValue()){
-			electionInstance = Election.get(electionIdLabel.getValue())
-		}else{
-	 		electionInstance = new Election()
-		}
-
-		electionInstance.year = yearTextbox.getValue()?.trim()?.toInteger()
-		electionInstance.electionDate = electionDatebox.getValue()
-		electionInstance.electionType = ElectionType.get(electionTypeListbox.getSelectedItem()?.getLastChild()?.getLabel()) ?: null
-		electionInstance.validate()
+		def electionInstance = electionService.save(electionMap)
 
 		if(electionInstance.hasErrors()){
 			errorMessages.append{
@@ -82,9 +88,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 					label(value: messageSource.getMessage(error,null),class:'errors')
 				}
 			}
-		}else{
-			electionInstance.save(flush:true)
-			voterElectionService.addAllVoters(electionInstance)
+		}else{			
 			Messagebox.show("Election Saved!", "Election Message", Messagebox.OK, Messagebox.INFORMATION)
 			hideElectionFormGrid()
 			showElectionsList()
@@ -104,7 +108,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 		}
 
 		electionsListRows.append{
-			for(_election in Election.list([sort:'year'])){
+			for(_election in electionService.list()){
 				def electionInstance = _election
 				row{
 					label(value: _election.year)

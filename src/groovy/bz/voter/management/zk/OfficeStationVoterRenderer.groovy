@@ -98,5 +98,9 @@ public class OfficeStationVoterRenderer implements RowRenderer{
 
     }
 
+    public void render(Row row, java.lang.Object data, int pageSize){
+            render(row, data)
+    }
+
 }
 

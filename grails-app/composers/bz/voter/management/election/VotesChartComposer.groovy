@@ -1,6 +1,8 @@
 package bz.voter.management.election
 
-import org.zkoss.zkgrails.*
+import org.zkoss.zk.grails.composer.*
+import org.zkoss.zk.ui.select.annotation.Wire
+import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zk.ui.Executions
 import org.zkoss.zul.Hlayout
 import org.zkoss.zul.Messagebox

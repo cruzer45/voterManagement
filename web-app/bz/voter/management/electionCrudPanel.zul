@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./electionCrudDiv"?>
 <?page zscriptLanguage="GroovyGrails"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul"
@@ -7,7 +8,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div apply="bz.voter.management.ElectionCrudPanelComposer">
+    <div id="electionCrudDiv" align="left"
+    	apply="bz.voter.management.ElectionCrudPanelComposer">
 				<vlayout >
 
 					<separator spacing='1px' />
@@ -49,7 +51,7 @@
 					</panelchildren>
 					</panel>
 				<panel title="Elections" style="padding:4px;" border="normal">
-					<panelchildren style="5px;">
+					<panelchildren style="5px">
 					<toolbar>
 						<button id="addElectionButton" label="Create Election" />
 					</toolbar>
