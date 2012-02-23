@@ -13,9 +13,7 @@ Service that has utilities to import files with voters into the database.
 class ImportFileService {
 
 	VoterService voterService = SpringUtil.getBean('voterService')
-    def addressService
-
-    static transactional = true
+    def addressService   
 
 
 	/**
@@ -25,12 +23,8 @@ class ImportFileService {
 	ConfigurationHolder.config.files.dir
 	@return void
 	**/
-    def importVoters(Division division,Election election, String fileName) {
-	 	
-	    //fileName = ConfigurationHolder.config.files.dir + fileName
-        //VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
-
-        //def votersMapList = excelImporter.getVoters()
+    def importVoters(Division division,Election election, String fileName) {	
+	   
         def votersMapList = [:]
 
         withRest(id: "importService", uri: ConfigurationHolder.config.importvoters.serverURL ){
@@ -38,9 +32,7 @@ class ImportFileService {
         	get(path: "importVoters/${fileName}"){resp,json->
         		println "\njson: ${json}"
         		votersMapList  = new JsonSlurper().parseText(json.toString())
-        	}
-
-        	println "\n\nvotersMapList: ${votersMapList}"        	
+        	}        	 	
         	
         }
 

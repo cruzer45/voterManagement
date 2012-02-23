@@ -62,6 +62,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     ElectionVotersPagingListModel electionVoterModel = null 
 
     FilterType _filterType
+    def _filterValue
     VoterListTypeEnum _voterListType
     PickupTimeEnum _pickupTimeEnum
     boolean _voted
@@ -86,6 +87,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
                 public void onEvent(Event evt){
                     def data = evt.getData()
                     _filterType = data.filterType
+                    _filterValue = data.filterValue
                     _voted = data.voted
                     filter(data.filterType,data.filterValue, _voted)
                 }
@@ -99,17 +101,20 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
     def filter(FilterType filterType, Object value, boolean voted){
         searchTextbox.setValue('')
+        //_startPageNumber = 0
         switch(filterType){
             case filterType.PLEDGE:
+                _startPageNumber = -1
                 pledge = (Pledge)value
                 _voterListType = VoterListTypeEnum.PLEDGE
-                refreshModel(filterType, pledge,voted,0)
+                refreshModel(filterType, pledge,voted,_startPageNumber)
                 break
 
             case filterType.PICKUP_TIME:
+                _startPageNumber = -1
                 _pickupTimeEnum = (PickupTimeEnum )value
                 _voterListType = VoterListTypeEnum.PICKUP_TIME
-                refreshModel(filterType,_pickupTimeEnum, voted, 0)
+                refreshModel(filterType,_pickupTimeEnum, voted, _startPageNumber)
                 break
         }
     }
@@ -147,8 +152,10 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 	def onClick_searchVoterButton(){
 		if(divisionInstance){
+            _startPageNumber = -1
+            _voterListType = VoterListTypeEnum.NAME
 			def searchText = searchTextbox.getValue()?.trim()
-            refreshModel(searchText,0)
+            refreshModel(searchText,_startPageNumber)
 		}else{
 			Messagebox.show("You must select a division!",
 				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
@@ -206,12 +213,26 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     **/
 	public void onPaging_voterPaging(ForwardEvent event){
 		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
-		_startPageNumber = pagingEvent.getActivePage()
-		if(searchTextbox.getValue().isAllWhitespace()){
-			refreshModel(_startPageNumber)
-		}else{
-			refreshModel(searchTextbox.getValue().trim(),_startPageNumber)
-		}
+        _startPageNumber = pagingEvent.getActivePage()
+		
+
+        switch(_voterListType){
+            case _voterListType.ALL:
+                refreshModel(_startPageNumber)
+                break
+
+            case _voterListType.PICKUP_TIME:
+                refreshModel(_filterType, _filterValue,_voted,_startPageNumber)
+                break
+
+            case _voterListType.PLEDGE:
+                refreshModel(_filterType, _filterValue,_voted,_startPageNumber)
+                break
+
+            case _voterListType.NAME:
+                refreshModel(searchTextbox.getValue()?.trim(), _startPageNumber)
+                break
+        }
 	}
 
 
@@ -220,11 +241,14 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     **/
     private void refreshModel(int activePage){
   		voterPaging.setPageSize(_pageSize)
+        activePage = (activePage < 0 ) ? 0 : activePage
+
 		electionVoterModel = new ElectionVotersPagingListModel(election,divisionInstance,activePage, _pageSize)
 		voterPaging.setTotalSize(electionVoterModel.getTotalSize())
 
 		if(_needsTotalSizeUpdate || activePage == 0){
 			_totalSize = electionVoterModel.getTotalSize()
+            voterPaging.setActivePage(0) 
 			_needsTotalSizeUpdate = false
 		}
 
@@ -235,7 +259,10 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     Refreshes the grid's model based on a search string.
     **/
     private void refreshModel(String search, int activePage){
+       
   		voterPaging.setPageSize(_pageSize)
+        activePage = (activePage <= 0 ) ? 0 : activePage
+        voterPaging.activePage = (_startPageNumber < 0 ) ? 0 : activePage
 		electionVoterModel = new ElectionVotersPagingListModel(search,election,divisionInstance,activePage, _pageSize)
 		voterPaging.setTotalSize(electionVoterModel.getTotalSize())
 
@@ -253,7 +280,10 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     }
 
     private void refreshModel(FilterType filterType, Object filterValue, boolean voted, int activePage){
+      
         voterPaging.setPageSize(_pageSize)
+        activePage = (activePage < 0 ) ? 0 : activePage
+        voterPaging.activePage = (_startPageNumber < 0 ) ? 0 : activePage
         electionVoterModel = new ElectionVotersPagingListModel(filterType,(Object)filterValue, election,divisionInstance, voted,activePage, _pageSize)
         voterPaging.setTotalSize(electionVoterModel.getTotalSize())
 

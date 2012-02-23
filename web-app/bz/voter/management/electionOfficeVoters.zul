@@ -7,12 +7,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div id="votersDiv" vflex='1' apply="bz.voter.management.ElectionOfficeVotersComposer">
+    <div id="votersDiv" vflex='3' 
+    	apply="bz.voter.management.ElectionOfficeVotersComposer">
 
-	 	<vlayout vflex='1'>
+	 	<vlayout vflex='3'>
 
-			<panel title="Voters List" style="padding: 4px " 
-				border="normal" vflex='1'>
+			<panel style="padding: 4px" 
+				border="normal" vflex='2' >
 				<panelchildren style="padding:5px" >
 					<toolbar>
                         <cell>
@@ -35,22 +36,22 @@
 					</toolbar>
 
 					<paging id="voterPaging" autohide="true" detailed="true"/>
-					<grid  vflex='1' hflex="1" id="electionOfficeVotersGrid">
+					<grid  vflex='2' hflex="1" id="electionOfficeVotersGrid" style="overflow:auto">
 						<columns  sizable="true">
-							<column label="Reg #" align="left" hflex="min"  />
-							<column label="Last Name" align="left" hflex="min"  />
-							<column label="First Name" align="left" hflex="min"  />
-							<column label="House #" align="left" hflex="min" />
-							<column label="Street" align="left" hflex="min" />
-							<column label="Municipality" align="left" hflex="min" />
-							<column label="Poll #" align="left" hflex="min" />
-							<column label="Affiliation" align="left" hflex="min" />
-							<column label="Pledge" align="left" hflex="min" />
-							<column label="Voted" align="left" hflex="min" />
-							<column label="Pickup Time" hflex="min" />
-							<column  hflex="min"/>
-							<column hflex="min"/>
-							<column hflex="min" />
+							<column align="left" width="5%"><label value="Reg #" sclass="columnsCell" /></column>
+							<column align="left"><label value="Last Name" sclass="columnsCell"/></column>
+							<column align="left"><label value="First Name" sclass="columnsCell"/></column>
+							<column align="left" width="5%"><label value="House #" sclass="columnsCell"/></column>
+							<column align="left"><label value="Street" sclass="columnsCell"/></column>
+							<column align="left"><label value="Municipality" sclass="columnsCell"/></column>
+							<column align="left" width="4%"><label value="Poll #" sclass="columnsCell"/></column>
+							<column align="left"><label value="Affiliation" sclass="columnsCell"/></column>
+							<column align="left" width="5%"><label value="Pledge" sclass="columnsCell"/></column>
+							<column align="left" width="4%"><label value="Voted" sclass="columnsCell"/></column>
+							<column ><label value="Pickup Time" sclass="columnsCell"/></column>
+							<column  />
+							<column />
+							<column />
 						</columns>
 						<rows id="votersListRows" vflex='1'>
 						</rows>

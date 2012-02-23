@@ -48,7 +48,7 @@ class VoterElectionComposer extends GrailsComposer {
 
     def voterListFacade
 
-	private final int _pageSize = 10
+	private final int _pageSize = 15
 	private int _startPageNumber = 0
 	private int _totalSize = 0
 	private boolean _needsTotalSizeUpdate = true

@@ -40,8 +40,8 @@
             font-size: 0.5em
         }
 
-        tr.z-row z.cell{
-            font-size: 0.25em
+        tr.z-row td.z-row-inner{
+            font-size: 0.1em
         }
 
         div.z-grid-body {
@@ -88,6 +88,17 @@
             font-size: 1em;
             font-weight: bold
         }
+
+        .columnsCell{
+            font-size: 0.9em;
+            font-weight: bold
+        }
+
+        .rowsCell{
+            font-size: 0.85em
+        }
+
+
 
 	</style>
 

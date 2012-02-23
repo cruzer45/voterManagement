@@ -78,6 +78,7 @@ class UserComposer extends GrailsComposer {
 
 			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
 
+			
 			userInstance.username = usernameTextbox.getValue()?.trim()
 			userInstance.password = passwordTextbox.getValue()?.trim()
 			userInstance.enabled = enabledCheckbox.isChecked()
@@ -146,7 +147,7 @@ class UserComposer extends GrailsComposer {
                     if(SecUserSecRole.get(userInstance.id, manageVotersRole.id)){
                         SecUserSecRole.remove(userInstance, manageVotersRole,true)
                     }
-                }
+                }            	
 
 				hideUserForm()
 				Messagebox.show('User Saved','User Message', Messagebox.OK,

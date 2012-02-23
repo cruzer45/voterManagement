@@ -7,7 +7,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div apply="bz.voter.management.VoterElectionComposer" 
+    <div apply="bz.voter.management.VoterElectionComposer" align="left"
 	 	style="margin:2px;font-size: 0.625em" vflex='1'>
 
 			<vlayout vflex='1'>
@@ -25,17 +25,23 @@
 					</toolbar>
 					<paging id="voterPaging" autohide="true" detailed="true"/>
 					<grid  vflex='1' id="pollStationVotersGrid">
-						<columns menupopup="auto" width="100%" sizable="true">
-							<column label="Reg #" align="left" width="6%"  />
-							<column label="Reg Date" align="left" width="10%"  />
-							<column label="Last Name" align="left"  />
-							<column label="First Name" align="left"  />
-							<column label="House #" align="left" width="5%" />
-							<column label="Street" align="left" width="8%" />
-							<column label="Municipality" align="left" />
-							<column label="Date of Birth" align="left" width="10%" />
-							<column label="Poll #" align="left" width="5%" />
-							<column label="Voted" align="left" width="5%" />
+						<columns menupopup="auto" width="100%" sizable="true" sclass="columnsCell">
+							<column align="left" width="6%" ><label value="Reg#" sclass="columnsCell"/></column>
+							<column align="left" width="10%"><label value="Reg Date" sclass="columnsCell" /></column>
+							<column align="left" ><label value="Last Name" sclass="columnsCell"/></column>
+							<column align="left" ><label value="First Name" sclass="columnsCell"/></column>
+							<column align="left" width="5%"><label  value="Hose #" sclass="columnsCell" /></column>
+							<column align="left" width="8%"><label value="Street" sclass="columnsCell"/></column>
+							<column align="left"><label value="Municipality" sclass="columnsCell"/></column>
+							<column align="left" width="10%">
+								<label value="Date of Birth" sclass="columnsCell"/>
+							</column>
+							<column align="left" width="5%">
+								<label value="Poll #" sclass="columnsCell"/>
+							</column>
+							<column align="left" width="5%">
+								<label value="Voted" sclass="columnsCell" />
+							</column>
 							<column width="8%"/>
 							<column width="8%"/>
 						</columns>

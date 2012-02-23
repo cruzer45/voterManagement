@@ -27,9 +27,12 @@ public class PollStationVoterRenderer implements RowRenderer{
         Button saveButton = new Button('Save')
         saveButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event evt) throws Exception{
+                
                 def voterElection = _voterElection.voterElection
-                voterElection.voted = _voterElection.voted
-			    voterElection.save(flush:true)
+                VoterElection.withTransaction{status->
+                    voterElection.voted = _voterElection.voted
+			         voterElection.save(flush:true)
+                 }
 			    Messagebox.show("Saved Successfuly!", "Voter", 
 			        Messagebox.OK, Messagebox.INFORMATION)
 			    if(voterElection.voted){
@@ -65,19 +68,39 @@ public class PollStationVoterRenderer implements RowRenderer{
         })
 
         row.setStyle("background-color: ${backgroundColor}")
-        row.getChildren().add(new Label("${_voterElection.registrationNumber}"))
-        row.getChildren().add(new Label("${_voterElection.registrationDate.format('dd-MMM-yyyy')}"))
-        row.getChildren().add(new Label("${_voterElection.lastName}"))
-        row.getChildren().add(new Label("${_voterElection.firstName}"))
-        row.getChildren().add(new Label("${_voterElection.houseNumber}"))
-        row.getChildren().add(new Label("${_voterElection.street}"))
-        row.getChildren().add(new Label("${_voterElection.municipality}"))
-        row.getChildren().add(new Label("${_voterElection.birthDate.format('dd-MMM-yyyy')}"))
-        row.getChildren().add(new Label("${_voterElection.pollNumber}"))
+
+        Label registrationNumberLabel = new Label("${_voterElection.registrationNumber}")
+        registrationNumberLabel.setSclass("rowsCell")
+        Label registrationDateLabel = new Label("${_voterElection.registrationDate.format('dd-MMM-yyyy')}")
+        registrationDateLabel.setSclass("rowsCell")
+        Label lastNameLabel = new Label("${_voterElection.lastName}")
+        lastNameLabel.setSclass("rowsCell")
+        Label firstNameLabel = new Label("${_voterElection.firstName}")
+        firstNameLabel.setSclass("rowsCell")
+        Label houseNumberLabel = new Label("${_voterElection.houseNumber}")
+        houseNumberLabel.setSclass("rowsCell")
+        Label streetLabel = new Label("${_voterElection.street}")
+        streetLabel.setSclass("rowsCell")
+        Label municipalityLabel = new Label("${_voterElection.municipality}")
+        municipalityLabel.setSclass("rowsCell")
+        Label birthDateLabel = new Label("${_voterElection.birthDate.format('dd-MMM-yyyy')}")
+        birthDateLabel.setSclass("rowsCell")
+        Label pollNumberLabel = new Label("${_voterElection.pollNumber}")
+        pollNumberLabel.setSclass("rowsCell")
+
+        
+        row.getChildren().add(registrationNumberLabel)
+        row.getChildren().add(registrationDateLabel)
+        row.getChildren().add(lastNameLabel)
+        row.getChildren().add(firstNameLabel)
+        row.getChildren().add(houseNumberLabel)
+        row.getChildren().add(streetLabel)
+        row.getChildren().add(municipalityLabel)
+        row.getChildren().add(birthDateLabel)
+        row.getChildren().add(pollNumberLabel)        
         row.getChildren().add(votedCheckbox)
         row.getChildren().add(saveButton)
         row.getChildren().add(detailsButton)
-
 
     }
 

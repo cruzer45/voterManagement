@@ -47,7 +47,7 @@ grails.project.dependency.resolution = {
         //compile "org.grails.plugins:spring-security-ui:0.2" 
         compile "org.grails.plugins:rest:0.7"
         //compile "org.grails.plugins:joda-time:1.3.1"      
-        compile "org.grails.plugins:zk:2.0.0.M4"
+        compile "org.grails.plugins:zk:2.0.0.M5"
 
         build "org.grails.plugins:tomcat:$grailsVersion"   
         

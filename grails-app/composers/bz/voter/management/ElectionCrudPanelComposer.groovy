@@ -109,12 +109,12 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 		electionsListRows.append{
 			for(_election in electionService.list()){
-				def electionInstance = _election
+				def electionInstance = Election.get(_election.id)
 				row{
 					label(value: _election.year)
 					label(value: _election.electionDate?.format('dd-MMM-yyyy'))
 					label(value: _election.electionType)
-					button(label: 'Edit', onClick:{
+					button(label: 'Edit', onClick:{						
 						showElectionFormGrid(electionInstance)
 					})
 					button(label: 'Poll Station', onClick:{

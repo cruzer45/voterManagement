@@ -15,7 +15,7 @@
 			<div vflex="min" id="navigationBox">
 			</div>
 
-			<div vflex="3" id="electionOfficeCenter">
+			<div vflex="3" id="electionOfficeCenter"  >
 			</div>
 
 		</vlayout>
