@@ -34,6 +34,10 @@ class SecUser {
 		}
 	}
 
+	def hasRole(SecRole secRole){
+		return getAuthorities().contains(secRole)
+	}
+
 	protected void encodePassword() {
 		password = springSecurityService.encodePassword(password)
 	}
