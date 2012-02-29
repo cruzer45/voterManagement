@@ -16,4 +16,13 @@ class Division implements Serializable{
 	 def beforeValidate(){
 	 	name = name?.trim()
 	}
+
+	public boolean equalsTo(other){
+		if(!(other instanceof Division)){
+			return false
+		}
+
+		this.id == other?.id
+	}
+
 }

@@ -24,6 +24,8 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 
 	def pledgeFormPanel
 
+	def codeTextbox
+
 	def errorMessages
 	def messageSource
 
@@ -32,6 +34,7 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 
 
 	def springSecurityService
+	def pledgeFacade
 
 	def afterCompose ={ window->
 		if(springSecurityService.isLoggedIn()){
@@ -59,22 +62,22 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 	def onClick_pledgeSaveButton(){
 		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 
-		def pledgeInstance
+		def params = [
+			id: pledgeIdLabel.getValue(),
+			name: nameTextbox.getValue()?.trim(),
+			code: codeTextbox.getValue()?.trim()
+		]
 
-		pledgeInstance = (pledgeIdLabel.getValue()) ? (Pledge.get(pledgeIdLabel.getValue())) : (new Pledge())
-		pledgeInstance.name = nameTextbox.getValue()?.trim()
-
-		pledgeInstance.validate()
+		Pledge pledgeInstance = pledgeFacade.save(params)
 
 		if(pledgeInstance.hasErrors()){
 			errorMessages.append{
 				for(error in pledgeInstance.errors.allErrors){
 					log.error error
-					label(value: messageSource.getMessage(error,null),class:'errors')
+					label(value: pledgeInstance.retrieveErrors(),class:'errors')
 				}
 			}
 		}else{
-			pledgeInstance.save(flush:true)
 			Messagebox.show('Pledge Saved!', 'Pledge Message', Messagebox.OK,
 				Messagebox.INFORMATION)
 			hidePledgeForm()
@@ -98,6 +101,7 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 				def pledgeInstance = _pledge
 				row{
 					label(value: _pledge.name)
+					label(value: _pledge.code)
 					button(label: 'Edit', onClick:{
 						showPledgeForm(pledgeInstance)
 					})
@@ -114,11 +118,13 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 		addPledgeButton.setVisible(false)
 		pledgeFormPanel.setVisible(true)
 		nameTextbox.setConstraint('no empty')
+		codeTextbox.setConstraint('no empty')
 
 		if(pledgeInstance){
 			pledgeFormPanel.setTitle(EDIT_TITLE)
 			nameTextbox.setValue("${pledgeInstance.name}")
 			pledgeIdLabel.setValue("${pledgeInstance.id}")
+			codeTextbox.setValue("${pledgeInstance.code}")
 		}else{
 			pledgeFormPanel.setTitle(NEW_TITLE)
 		}
@@ -130,6 +136,8 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 		pledgeFormPanel.setTitle("")
 		nameTextbox.setConstraint('')
 		nameTextbox.setValue('')
+		codeTextbox.setConstraint('')
+		codeTextbox.setValue('')
 		addPledgeButton.setVisible(true)
 		pledgeFormPanel.setVisible(false)
 	}

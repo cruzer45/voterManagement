@@ -25,10 +25,7 @@
 								<textbox id="pollNumberTextbox" constraint="no empty"
 									width="90%" />
 							</row>
-							<row>
-								<label value="Division" />
-								<listbox id="divisionListbox" mold="select" rows="1" />
-							</row>
+							
 							<row>
 								<cell colspan="2">
 									<label id="pollStationIdLabel" visible="false"/>

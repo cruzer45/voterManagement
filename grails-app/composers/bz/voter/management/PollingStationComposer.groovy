@@ -29,6 +29,7 @@ class PollingStationComposer extends GrailsComposer {
 
 
 	def springSecurityService
+	def pollStationFacade
 
 
 	private static NEW_TITLE = "New Poll Station"
@@ -62,29 +63,27 @@ class PollingStationComposer extends GrailsComposer {
 
 		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 
-		def pollStationInstance
+			def params = [
+				id: pollStationIdLabel.getValue(),
+				pollNumber: pollNumberTextbox.getValue()?.trim()
+			]
 
-		pollStationInstance = (pollStationIdLabel.getValue()) ? (PollStation.get(pollStationIdLabel.getValue())) : (new PollStation())
+			PollStation pollStationInstance = pollStationFacade.save(params)
 
-		pollStationInstance.pollNumber = pollNumberTextbox.getValue()?.trim()
-		pollStationInstance.division = divisionListbox.getSelectedItem()?.getValue()
-
-		pollStationInstance.validate()
-
-		if(pollStationInstance.hasErrors()){
-			errorMessages.append{
-				for(error in pollStationInstance.errors.allErrors){
-					log.error error
-					label(value: messageSource.getMessage(error,null),class:'errors')
+		
+			if(pollStationInstance.hasErrors()){
+				errorMessages.append{
+					for(error in pollStationInstance.errors.allErrors){
+						log.error error
+						label(value: messageSource.getMessage(error,null),class:'errors')
+					}
 				}
+			}else{
+				Messagebox.show("Poll Station Saved!", "Poll Station Message", 
+					Messagebox.OK, Messagebox.INFORMATION)
+				hidePollStationForm()
+				showPollStationsList()
 			}
-		}else{
-			pollStationInstance.save(flush:true)
-			Messagebox.show("Poll Station Saved!", "Poll Station Message", 
-				Messagebox.OK, Messagebox.INFORMATION)
-			hidePollStationForm()
-			showPollStationsList()
-		}
 
 		}else{
 			ComposerHelper.permissionDeniedBox()
@@ -100,9 +99,10 @@ class PollingStationComposer extends GrailsComposer {
 		pollStationsListRows.append{
 			for(_pollStation in PollStation.list([sort:'pollNumber'])){
 				def pollStationInstance = _pollStation
+				Division division = Division.get(_pollStation.divisionId)
 				row{
 					label(value: _pollStation.pollNumber)
-					label(value: _pollStation.division.name)
+					label(value: division.name)
 					button(label: 'Edit', onClick: {
 						showPollStationForm(pollStationInstance)
 						
@@ -127,9 +127,7 @@ class PollingStationComposer extends GrailsComposer {
 		}else{
 			pollStationInstance = new PollStation()
 			pollStationFormPanel.setTitle(NEW_TITLE)
-		}
-
-		ComposerHelper.initializeListbox(divisionListbox,pollStationInstance,'division')
+		}		
 
 	 }
 
@@ -139,7 +137,6 @@ class PollingStationComposer extends GrailsComposer {
 		pollStationFormPanel.setTitle("")
 		pollNumberTextbox.setConstraint("")
 		pollNumberTextbox.setValue("")
-		divisionListbox.setSelectedIndex(-1)
 		addPollStationButton.setVisible(true)
 		pollStationFormPanel.setVisible(false)
 	}

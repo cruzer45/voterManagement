@@ -28,12 +28,16 @@ class DivisionComposer extends GrailsComposer {
 	def errorMessages
 
 	def springSecurityService
+	def divisionFacade
+
+	ListModel districtModel
 
 	private static NEW_TITLE = "NEW DIVISION"
 	private static EDIT_TITLE = "Edit Division"
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
+	 		districtModel = new ListModelList(District.list())
 	 		showDivisionsList()
 		}else{
 			execution.sendRedirect('/login')
@@ -57,31 +61,27 @@ class DivisionComposer extends GrailsComposer {
 	def onClick_divisionSaveButton(){
 		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 
-		def divisionInstance
-		if(divisionIdLabel.getValue()){
-			divisionInstance = Division.get(divisionIdLabel.getValue())
-		}else{
-			divisionInstance = new Division()
-		}
+			def params = [
+				id: divisionIdLabel.getValue(),
+				name: divisionNameTextbox.getValue()?.trim()?.capitalize(),
+				district: districtModel.getSelection().toArray()[0]
+			]
 
-		divisionInstance.name = divisionNameTextbox.getValue()?.trim()?.capitalize()
-		divisionInstance.district = districtListbox.getSelectedItem()?.getValue() ?: District.findByName('Unknown')
-		divisionInstance.validate()
+			Division divisionInstance = divisionFacade.save(params)
 
-		if(divisionInstance.hasErrors()){
-			errorMessages.append{
-				for(error in divisionInstance.errors.allErrors){
-					log.error error
-					label(value: messageSource.getMessage(error,null),class:'errors')
+			if(divisionInstance.hasErrors()){
+				errorMessages.append{
+					for(error in divisionInstance.errors.allErrors){
+						log.error error
+						label(value: messageSource.getMessage(error,null),class:'errors')
+					}
 				}
+			}else{				
+				hideDivisionForm()
+				Messagebox.show("Division Saved!", "Division Message", Messagebox.OK,
+					Messagebox.INFORMATION)
+				showDivisionsList()
 			}
-		}else{
-			divisionInstance.save(flush:true)
-			hideDivisionForm()
-			Messagebox.show("Division Saved!", "Division Message", Messagebox.OK,
-				Messagebox.INFORMATION)
-			showDivisionsList()
-		}
 
 		}else{
 			ComposerHelper.permissionDeniedBox()
@@ -89,36 +89,50 @@ class DivisionComposer extends GrailsComposer {
 	}
 
 
-	 def showDivisionForm(Division divisionInstance){
+	def showDivisionForm(Division divisionInstance){
 	 	divisionIdLabel.setValue("")
 		errorMessages.getChildren().clear()
 		addDivisionButton.setVisible(false)
 		divisionFormPanel.setVisible(true)
-		divisionNameTextbox.setConstraint('no empty')
-		ListModel divisionModel = new ListModelList(District.list())
-		districtListbox.setModel(divisionModel)
+		divisionNameTextbox.setConstraint('no empty')		
+		districtListbox.setModel(districtModel)	
 
 		if(divisionInstance){
-			divisionInstance = Division.load(divisionInstance.id)
+			divisionInstance = Division.get(divisionInstance.id)			
 			divisionFormPanel.setTitle(EDIT_TITLE)
 			divisionNameTextbox.setValue("${divisionInstance.name}")
 			divisionIdLabel.setValue("${divisionInstance.id}")
-			divisionModel.addSelection(divisionInstance.district)
+			def selection = districtModel.addToSelection(District.get(divisionInstance.districtId))			
+			def selectedItem = districtModel.getSelection()
+			
+			def index = 0
+			districtListbox.getListModel().each{
+				println it
+				
+				for(_district in selectedItem){
+					if(_district.equalsTo(it)){
+						districtListbox.setSelectedIndex(index)
+					}
+				}				
+				index += 1
+			}
 		}else{
 			divisionFormPanel.setTitle(NEW_TITLE)
 		}
 
+			
+
 	 }
 
 
-	 def hideDivisionForm(){
+	def hideDivisionForm(){
 	 	errorMessages.getChildren().clear()
 		divisionFormPanel.setTitle("")
 		divisionNameTextbox.setConstraint("")
 		divisionNameTextbox.setValue("")
 		addDivisionButton.setVisible(true)
 		divisionFormPanel.setVisible(false)
-	 }
+	}
 
 
 	 def showDivisionsList(){
@@ -129,10 +143,11 @@ class DivisionComposer extends GrailsComposer {
 
 		divisionsListRows.append{
 			for(_division in Division.list([sort:'name'])){
-				def divisionInstance = _division
+				def divisionInstance = Division.get(_division.id)
+				def district = District.get(divisionInstance.districtId)
 				row{
 					label(value: _division.name)
-					label(value: "${_division.district}")
+					label(value: "${district}")
 					button(label: 'Edit', onClick: {
 						showDivisionForm(divisionInstance)
 					})

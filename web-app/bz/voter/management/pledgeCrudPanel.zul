@@ -25,6 +25,10 @@
 									width="90%" />
 							</row>
 							<row>
+								<label value="Code" />
+								<textbox id="codeTextbox" width="90%"/>
+							</row>
+							<row>
 								<cell colspan="2">
 									<label id="pledgeIdLabel" visible="false"/>
 								</cell>
@@ -48,6 +52,7 @@
 					<grid mold="paging" pageSize="20">
 						<columns menupopup="auto" width="100%">
 							<column label="Name" align="left" sort="auto" />
+							<column label="Code" align="left" />
 							<column />
 						</columns>
 						<rows id="pledgesListRows">
