@@ -18,13 +18,13 @@ class PasswordComposer extends GrailsComposer {
 
     def saveBtn
 
+    def securityFacade
+    def sessionFactory
+
     def afterCompose = { window ->
 	 	if(!springSecurityService.isLoggedIn()){
 			execution.sendRedirect('/login')
-
-		}else{
-            println "\nuser: ${user}"
-        }
+		}
     }
 
     
@@ -33,14 +33,17 @@ class PasswordComposer extends GrailsComposer {
         def newPassword = newPasswordTextbox.getValue()
         def verifyPassword = verifyPasswordTextbox.getValue()
 
-        def errors = validatePasswords()
+        def errors = securityFacade.validatePasswords(springSecurityService.getCurrentUser().id, currentPassword, newPassword, verifyPassword)
 
         if(errors.isAllWhitespace()){
-            user = SecUser.load(springSecurityService.getCurrentUser().id) //SecUser.get(SpringSecurityUtils.getSubject().getPrinicpal())
-            user.password = verifyPassword
-            user.save(flush:true)
+            def params = [
+                id: springSecurityService.getCurrentUser().id,
+                password: verifyPassword
+            ]
+
+            securityFacade.changePassword(params)
             Messagebox.show("Password changed!", "Password", Messagebox.OK,
-                Messagebox.ERROR)
+                Messagebox.INFORMATION)
         }else{
             Messagebox.show(errors, "Error changing password!", Messagebox.OK,
                 Messagebox.ERROR)
@@ -50,7 +53,7 @@ class PasswordComposer extends GrailsComposer {
 
 
     def validatePasswords(){
-        user = SecUser.load(springSecurityService.getCurrentUser().id) //SecUser.get(SpringSecurityUtils.getSubject().getPrinicpal())
+        user = SecUser.get(springSecurityService.getCurrentUser().id) //SecUser.get(SpringSecurityUtils.getSubject().getPrinicpal())
         def errorStr = ""
         if(!springSecurityService.encodePassword(currentPasswordTextbox.getValue()).equals(user.password)){
             errorStr += "Current password is incorrect!"

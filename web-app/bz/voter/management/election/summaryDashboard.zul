@@ -25,9 +25,7 @@
                                 <auxhead>
                                     <auxheader label="Total Voters by Pledge" style="font-size: 0.75em" colspan="2" />
                                 </auxhead>
-                                <columns>
-                                    <column label="Pledge" style="font-size: 0.75em" hflex="1" align="center"/>
-                                    <column label="Total Voters" style="font-size: 0.75em" hflex="1" align="center"/>
+                                <columns id="pledgesSummaryColumns">                                    
                                 </columns>
                                 <rows id="pledgesSummaryRows" >
                                 </rows>

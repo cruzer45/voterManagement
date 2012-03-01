@@ -27,6 +27,7 @@ class MunicipalityCrudPanelComposer extends GrailsComposer {
 	def errorMessages
 	def messageSource
 
+	def municipalityFacade
 
 	private static EDIT_TITLE = "Edit Municipality"
 	private static NEW_TITLE = "New Municipality"
@@ -59,13 +60,14 @@ class MunicipalityCrudPanelComposer extends GrailsComposer {
 
 	def onClick_municipalitySaveButton(){
 		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
-			def municipalityInstance
-			municipalityInstance = (municipalityIdLabel.getValue()) ? (Municipality.get(municipalityIdLabel.getValue())) : (new Municipality())
+		
+			def params = [
+				id: municipalityIdLabel.getValue(),
+				name: nameTextbox.getValue()?.trim()?.capitalize(),
+				district: districtListbox.getSelectedItem()?.getValue()
+			]
 
-			municipalityInstance.name = nameTextbox.getValue()?.trim()?.capitalize()
-			municipalityInstance.district = districtListbox.getSelectedItem()?.getValue()
-
-			municipalityInstance.validate()
+			def municipalityInstance = municipalityFacade.save(params)
 
 			if(municipalityInstance.hasErrors()){
 				errorMessages.append{
@@ -74,8 +76,7 @@ class MunicipalityCrudPanelComposer extends GrailsComposer {
 						label(value:messageSource.getMessage(error, null), class:'errors')
 					}
 				}
-			}else{
-				municipalityInstance.save(flush:true)
+			}else{				
 				Messagebox.show("Municipality Saved!", 'Municipality Message!', 
 					Messagebox.OK, Messagebox.INFORMATION)
 				hideMunicipalityForm()

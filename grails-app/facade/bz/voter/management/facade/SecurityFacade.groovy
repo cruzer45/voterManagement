@@ -3,10 +3,12 @@ package bz.voter.management.facade
 import org.zkoss.zk.grails.*
 
 import bz.voter.management.*
+import bz.voter.management.spring.SpringUtil
 
 class SecurityFacade {
 
 	def sessionFactory
+   def springSecurityService = SpringUtil.getBean('springSecurityService')
 
    
 	/**
@@ -14,17 +16,58 @@ class SecurityFacade {
 	@param Map with the parameters required to change 
 	a password:
 		<ul>
-			<li>oldPassword</li>
-			<li>newPassword</li>
-			<li>repeatNewPassword</li>
-			<li>secUserId</li>
+			<li>id</li>
+         <li>password</li>
 		</ul>
 	@return SecUser
 	**/
    	public SecUser changePassword(params){
-   		SecUser user = SecUser.get(params.secUserId)
+   		SecUser user //= SecUser.get(params.id)
 
-   	} 
+         if(params.id){
+            SecUser.withTransaction{status->
+               user = SecUser.get(params.id)
+               user.password = params.password
+               user.validate()
+               if(user.hasErrors()){
+                  for(error in user){
+                     log.error error
+                  }
+               }else{
+                  user.save()
+               }
+            }
+         }
+
+         return user
+
+   	}
+
+      public String validatePasswords(def id, String currentPassword, String newPassword, String verifyPassword){
+
+         def errorStr = "" 
+         SecUser.withSession{session->
+
+            SecUser user = SecUser.get(id)
+
+            if(user){
+               if(!springSecurityService.encodePassword(currentPassword).equals(user.password)){
+                  errorStr += "Current password is incorrect!"
+               }
+
+               if(!newPassword.equals(verifyPassword)){
+                  errorStr += "The new passwords do not match!" 
+               }
+        
+            }else{
+               errorStr = "Invalid User !"
+            }
+         }
+
+         //sessionFactory.getCurrentSession().clear()
+
+         return errorStr
+      } 
 
 
    	/**

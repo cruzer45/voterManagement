@@ -29,6 +29,7 @@ class SummaryDashboardComposer extends GrailsComposer {
     def summaryDashboardPanel
 
     def pledgesSummaryBox
+    def pledgesSummaryColumns
     def pledgesSummaryGrid
     def pledgesSummaryRows
     def pledgeVotesGrid
@@ -61,11 +62,13 @@ class SummaryDashboardComposer extends GrailsComposer {
             affiliations = Affiliation.list([sort:'name'])
             pledges = Pledge.list([sort:'name'])
 
+            initPledgesSummaryColumns()
             initPledgesSummaryRows()
             initAffiliationSummaryColumns()
             initAffiliationSummaryRows()
             initPledgeVotesGrid()
             initAffiliationVotesGrid()
+
 
         }else{
             ComposerHelper.permissionDeniedBox()
@@ -73,16 +76,40 @@ class SummaryDashboardComposer extends GrailsComposer {
     }
 
 
+    
+    def initPledgesSummaryColumns(){
+        
+        pledgesSummaryColumns.getChildren().clear()
+
+        pledgesSummaryColumns.append{
+            for(_pledge in pledges){
+                column{
+                    label(value: "${_pledge.name}", class:'gridHeaders')
+                }
+            }
+
+        }
+
+       
+
+    }
+
+
     def initPledgesSummaryRows(){
         pledgesSummaryRows.getChildren().clear()
 
-        for(voters in voterElectionService.summaryByPledge(election,division)){
-            pledgesSummaryRows.append{
-                row{
-                    label(value: "${voters.pledge}", class: "voteCountLabels")
-                    label(value: "${voters.total_voters}", class: "voteCountLabels")
+        def _voters = voterElectionService.summaryByPledge(election,division)
+
+        pledgesSummaryRows.append{
+            row{
+                for(_pledge in pledges){
+                    def columnValue = _voters.find{voter->
+                        voter.pledge == "${_pledge.name}"
+                    }
+                    label(value:"${columnValue?.total_voters}", class:"voteCountLabels")
                 }
-            } // End of pledgesSummaryRows.append
+            }
+
         }
 
     }
