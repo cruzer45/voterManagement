@@ -140,7 +140,7 @@ class SummaryDashboardComposer extends GrailsComposer {
                         voter.party == "${affiliation.name}"
                     }
 
-                    label(value: "${columnValue.total}", class: "voteCountLabels")
+                    label(value: "${columnValue?.total}", class: "voteCountLabels")
                 }
             }
         }
