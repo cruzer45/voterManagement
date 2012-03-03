@@ -40,16 +40,17 @@ grails.project.dependency.resolution = {
         runtime "org.grails.plugins:resources:1.1.6"
        
         compile "org.grails.plugins:export:1.1"
-        //compile "org.grails.plugins:famfamfam:1.0.1"
         compile "org.grails.plugins:spring-security-core:1.2.7.2"
-        //compile "org.grails.plugins:jquery-ui:1.8.15"
         compile "org.grails.plugins:mail:1.0"
-        //compile "org.grails.plugins:spring-security-ui:0.2" 
-        compile "org.grails.plugins:rest:0.7"
-        //compile "org.grails.plugins:joda-time:1.3.1"      
+        compile "org.grails.plugins:rest:0.7" 
         compile "org.grails.plugins:zk:2.0.0.M5"
 
         build "org.grails.plugins:tomcat:$grailsVersion"   
         
+    }
+
+    plugins{
+         compile ":database-migration:1.0"
+
     }
 }

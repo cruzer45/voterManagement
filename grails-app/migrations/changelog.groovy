@@ -563,4 +563,10 @@ databaseChangeLog = {
 	changeSet(author: "rguerra (generated)", id: "1323274351757-51") {
 		createSequence(sequenceName: "hibernate_sequence")
 	}
+
+	include file: 'changelog-0.1.2.groovy'
+
+	include file: 'changelog-0.1.2.groovy'
+
+	include file: 'changelog-1.0.1.groovy'
 }

@@ -61,6 +61,10 @@ grails.exceptionresolver.params.exclude = ['password']
 files.dir='/usr/local/files/'
 importvoters.serverURL = "http://localhost:9090/import-voters/api/"
 
+//Database migrations
+grails.plugin.databasemigration.updateOnStart = true
+grails.plugin.databasemigration.updateOnStartFileNames = ["changelog.groovy"]
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {

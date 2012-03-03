@@ -31,7 +31,7 @@ environments {
     		driverClassName = "org.postgresql.Driver"
     		username = "voter_management"
     		password = ".,password.\$"
-            dbCreate = "update"
+            //dbCreate = "update"
 			dialect = 'org.hibernate.dialect.PostgreSQLDialect'
             url = "jdbc:postgresql://127.0.0.1:5432/voter-management"
         }
