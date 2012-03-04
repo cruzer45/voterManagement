@@ -51,7 +51,7 @@ class SummaryDashboardComposer extends GrailsComposer {
     def voterElectionService
     def voterService
 
-    def disabledHours = [ONE,TWO,THREE,FOUR,FIVE,TWENTY,TWENTY_ONE,TWENTY_TWO,TWENTY_THREE,TWENTY_FOUR]
+    def disabledHours = [ONE,TWO,THREE,FOUR,FIVE,NINETEEN,TWENTY,TWENTY_ONE,TWENTY_TWO,TWENTY_THREE,TWENTY_FOUR]
 
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
@@ -106,7 +106,13 @@ class SummaryDashboardComposer extends GrailsComposer {
                     def columnValue = _voters.find{voter->
                         voter.pledge == "${_pledge.name}"
                     }
-                    label(value:"${columnValue?.total_voters}", class:"voteCountLabels")
+                    columnValue?.total_voters = columnValue?.total_voters ?: 0
+                    if(columnValue?.total_voters){                        
+                        label(value:"${columnValue?.total_voters}", class:"voteCountLabels")
+                    }else{
+                        label(value:"0", class:"voteCountLabels")
+                    }                    
+                    
                 }
             }
 
@@ -133,17 +139,27 @@ class SummaryDashboardComposer extends GrailsComposer {
 
         def voters = voterService.summaryByAffiliation(election,division)
 
+        def totalVotes = 0        
+
         affiliationRows.append{
             row{
                 for(affiliation in affiliations){
                     def columnValue = voters.find{voter-> 
                         voter.party == "${affiliation.name}"
+                        
                     }
 
                     label(value: "${columnValue?.total}", class: "voteCountLabels")
+                    //totalVotes += columnValue?.total?.toInteger()
                 }
             }
         }
+
+        //println "totalVotesByAffiliation: ${totalVotesByAffiliation}"
+
+        /*affiliationRows.append{
+
+        }*/
     }
 
 
@@ -167,6 +183,8 @@ class SummaryDashboardComposer extends GrailsComposer {
 
 
         def pledgeRows = []
+
+        def totalVotesByPledge = [Yes:0, No:0, Undecided:0]
 
         TwentyFourHourEnum.values().each{hourEnum->
             
@@ -197,6 +215,10 @@ class SummaryDashboardComposer extends GrailsComposer {
         }
 
         for(voteRecord in pledgeRows){
+            totalVotesByPledge.Yes += voteRecord.Yes
+            totalVotesByPledge.No += voteRecord.No
+            totalVotesByPledge.Undecided += voteRecord.Undecided
+
             pledgeVotesRows.append{
                 row(align:"center"){
                     label(value: "${voteRecord.hour}", class:"voteCountLabels")
@@ -204,6 +226,17 @@ class SummaryDashboardComposer extends GrailsComposer {
                     label(value: "${voteRecord.Undecided}", class:"voteCountLabels")
                     label(value: "${voteRecord.Yes}", class:"voteCountLabels")
                 }
+            }
+        }
+
+        def totalVotes = totalVotesByPledge.Yes + totalVotesByPledge.No + totalVotesByPledge.Undecided
+
+        pledgeVotesRows.append{
+            row(align:"center", style:"background-color: khaki"){
+                label(value:"TOTAL: ${totalVotes}", class:"countTotal")
+                label(value: "${totalVotesByPledge.No}", class:"countTotal")
+                label(value: "${totalVotesByPledge.Undecided}", class:"countTotal")
+                label(value: "${totalVotesByPledge.Yes}", class:"countTotal")
             }
         }
 
@@ -226,6 +259,8 @@ class SummaryDashboardComposer extends GrailsComposer {
             }
         }//End of affiliationVotesColumns.append
 
+        def totalVotesByAffiliation = [PUP:0,UDP:0,UNKNOWN:0]
+        
         def affiliationRows = []
         TwentyFourHourEnum.values().each{hourEnum->
 
@@ -258,6 +293,9 @@ class SummaryDashboardComposer extends GrailsComposer {
         }
 
         for(voteRecord in affiliationRows){
+            totalVotesByAffiliation['PUP'] += voteRecord.PUP
+            totalVotesByAffiliation['UDP'] += voteRecord.UDP
+            totalVotesByAffiliation['UNKNOWN'] += voteRecord.UNKNOWN
             affiliationVotesRows.append{
                 row{
                     label(value: "${voteRecord.hour}", class:"voteCountLabels")
@@ -267,6 +305,17 @@ class SummaryDashboardComposer extends GrailsComposer {
                 }
             }
         }
+
+        def totalVotes = totalVotesByAffiliation.PUP + totalVotesByAffiliation.UDP + totalVotesByAffiliation.UNKNOWN
+        affiliationVotesRows.append{
+            row(style: 'background-color: khaki'){
+                label(value: "TOTAL:   ${totalVotes}", class:"countTotal")
+                label(value: "${totalVotesByAffiliation.PUP}", class:"countTotal")
+                label(value: "${totalVotesByAffiliation.UDP}", class:"countTotal")
+                label(value: "${totalVotesByAffiliation.UNKNOWN}", class:'countTotal')
+            }
+        }
+        
     }
 
 }

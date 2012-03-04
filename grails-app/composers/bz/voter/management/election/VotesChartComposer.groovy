@@ -80,7 +80,6 @@ class VotesChartComposer extends GrailsComposer {
                 chartBox.getChildren().clear()
                 votesSummaryRows.getChildren().clear()
                 hourlyCountRows.getChildren().clear()
-                println "goTo displayChart()"
                 displayChart(pollStation, results)
             }else{
                 Messagebox.show("Kindly Select a Poll Station!", "Charts Message", Messagebox.OK,
@@ -118,9 +117,10 @@ class VotesChartComposer extends GrailsComposer {
         
         hlayout = new Hlayout()
         //chartBox.appendChild(hlayout)
-        hlayout.appendChild(chartBox)
+        //hlayout.appendChild(chartBox)
 
         hlayout.appendChild(chart)
+        chartBox.appendChild(hlayout)
 
         gridSetup()
 
@@ -156,7 +156,6 @@ class VotesChartComposer extends GrailsComposer {
 
         def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
         voteCounts = voteCounts.sort{it.vote_hour}
-        println "\nvoteCounts: ${voteCounts}"
         hourlyCountRows.append{
             for(hourVote in voteCounts){
                 switch(hourVote.vote_hour){
