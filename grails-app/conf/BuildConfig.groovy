@@ -50,7 +50,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins{
-         compile ":database-migration:1.0"
+         //compile ":database-migration:1.0"
 
     }
 }
