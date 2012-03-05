@@ -9,6 +9,7 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 
 	def voterService
     def voterElectionService
+    //def importFileService = SpringUtil.getBean('importFileService')
 
     protected void setUp() {
         super.setUp()
@@ -17,6 +18,9 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 
 		  def division = new Division(name:"Belmopan").save()
 		  def pollStation = new PollStation()
+		  def election = Election.findByYear(2011) ?: new Election(year: 2011, electionType: ElectionType.findByName('General')).save()
+		  importFileService.importVoters(division,election,'Sample.xls')
+
 		  pollStation.pollNumber = 2
 		  pollStation.division = division
 		  pollStation.save()

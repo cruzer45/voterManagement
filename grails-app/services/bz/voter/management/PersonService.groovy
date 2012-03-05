@@ -1,5 +1,6 @@
 package bz.voter.management
 
+
 class PersonService {
 
     static transactional = true
@@ -29,7 +30,7 @@ class PersonService {
 	**/
 	 def save(def params) {
 	 	
-		params.birthDate = params.birthDate ? new Date().parse('yyyy-MM-dd', params.birthDate) : null
+		params.birthDate = (params.birthDate instanceof java.util.Date) ?: new Date().parse('yyyy-MM-dd', params.birthDate)
 
 		saveBasicInformation(params)
 	 }

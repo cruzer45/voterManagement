@@ -124,7 +124,7 @@ class VoterElectionController {
             def phone3Formatter = {domain,value->
                 "${domain.voter.registrationAddress.phoneNumber3}"
             }
-
+           
 
             def votedFormatter = {domain, value->
                 def voted
@@ -142,7 +142,6 @@ class VoterElectionController {
                 "${voted}"
             }
 
-            
             switch(params.format){
                 
                 case "pdf":
@@ -156,12 +155,12 @@ class VoterElectionController {
                         pollNumber:     pollNumberFormatter,
                         affiliation:    affiliationFormatter,
                         voted:          votedFormatter
-                    ]
+                    ]                    
                     break
 
                 case "excel":
                     fields = excelFields
-                    labels = excelLabels
+                    labels = excelLabels  
                     formatters = [
                         registrationNumber: registrationNumberFormatter,
                         registrationAddress: registrationAddressFormatter,
@@ -176,7 +175,7 @@ class VoterElectionController {
                         phone1:         phone1Formatter,
                         phone2:         phone2Formatter,
                         phone3:         phone3Formatter
-                    ]
+                    ]                  
                     break
 
             }

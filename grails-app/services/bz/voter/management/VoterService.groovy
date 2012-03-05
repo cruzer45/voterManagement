@@ -5,20 +5,41 @@ import java.util.Calendar
 import bz.voter.management.utils.FilterType
 import bz.voter.management.spring.SpringUtil
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+
 class VoterService {
 
     static transactional = true
 
-	 def messageSource //= SpringUtil.getBean('messageSource')
+	def messageSource //= SpringUtil.getBean('messageSource')
 
-	 def personService
+	def personService
 
-	 static String LIST_BY_DIVISION_QUERY = "select v " +
+	def jdbcTemplate
+   	def dataSource// = SpringUtil.getBean('dataSource')
+
+	static String LIST_BY_DIVISION_QUERY = "select v " +
 			"from Voter as v " +
 			"inner join v.pollStation as poll " +
 			"inner join v.person as person " +
 			"where  poll.division =:division " +
 			"order by person.lastName"
+	
+	static String LIST_BY_DIVISION_FOR_PRINT_QUERY = "SELECT v.registration_number as registration_number, v.registration_date as registration_date, "+
+	 		"p.last_name as last_name , (SELECT EXTRACT(year from AGE(NOW(), p.birth_date))) as age, "+
+	 		"p.first_name as first_name, p.birth_date as birth_date, ra.house_number as house_number, "+
+	 		"ra.street, mun.name as municipality, " +
+	 		"ra.phone_number1, ra.phone_number2, ra.phone_number3 " +
+	 		"from voter as v " +
+	 		"inner join poll_station as poll on v.poll_station_id = poll.id " +
+	 		"inner join person as p on v.person_id = p.id " +
+	 		"inner join address as ra on ra.person_id = p.id " +
+	 		"inner join address_type as at ON at.id = ra.address_type_id AND at.name = 'Registration' " +
+	 		"inner join municipality as mun on ra.municipality_id = mun.id " +
+	 		"where poll.division_id =:division_id "	+
+	 		"order by p.last_name "	
 
 	static String SEARCH_BY_DIVISION_QUERY = "select v " +
 			"from Voter as v " +
@@ -49,6 +70,22 @@ class VoterService {
             "and v.affiliation =:affiliation " +
 			"order by person.lastName"
 
+	static String FILTER_BY_AFFILIATION_FOR_PRINT_QUERY = "SELECT v.registration_number as registration_number, " +
+			"v.registration_date::date as registration_date, "+
+	 		"p.last_name as last_name , (SELECT EXTRACT(year from AGE(NOW(), p.birth_date))) as age, "+
+	 		"p.first_name as first_name, p.birth_date::date as birth_date, ra.house_number as house_number, "+
+	 		"ra.street, mun.name as municipality, " +
+	 		"ra.phone_number1, ra.phone_number2, ra.phone_number3 " +
+	 		"from voter as v " +
+	 		"inner join poll_station as poll on v.poll_station_id = poll.id " +
+	 		"inner join person as p on v.person_id = p.id " +
+	 		"inner join address as ra on ra.person_id = p.id " +
+	 		"inner join address_type as at ON at.id = ra.address_type_id AND at.name = 'Registration' " +
+	 		"inner join municipality as mun on ra.municipality_id = mun.id " +
+	 		"where poll.division_id =:division_id "	+
+	 		"and v.affiliation_id =:affiliation_id " +
+	 		"order by p.last_name "	
+
 
 	 static String GET_COUNT_BY_AFFILIATION = "select count(v) " +
 			"from Voter as v " +
@@ -77,6 +114,22 @@ class VoterService {
 			"where poll.division =:division " +
             "and v.pollStation =:pollStation " +
 			"order by person.lastName"
+
+	static String FILTER_BY_POLLSTATION_FOR_PRINT_QUERY = "SELECT v.registration_number as registration_number, " +
+			"v.registration_date as registration_date, "+
+	 		"p.last_name as last_name , (SELECT EXTRACT(year from AGE(NOW(), p.birth_date))) as age, "+
+	 		"p.first_name as first_name, p.birth_date as birth_date, ra.house_number as house_number, "+
+	 		"ra.street, mun.name as municipality, " +
+	 		"ra.phone_number1, ra.phone_number2, ra.phone_number3 " +
+	 		"from voter as v " +
+	 		"inner join poll_station as poll on v.poll_station_id = poll.id " +
+	 		"inner join person as p on v.person_id = p.id " +
+	 		"inner join address as ra on ra.person_id = p.id " +
+	 		"inner join address_type as at ON at.id = ra.address_type_id AND at.name = 'Registration' " +
+	 		"inner join municipality as mun on ra.municipality_id = mun.id " +
+	 		"where poll.division_id =:division_id "	+
+	 		"and poll.id =:poll_station_id " +
+	 		"order by p.last_name "	
 
 
 
@@ -219,7 +272,7 @@ class VoterService {
 	@return A list of results
 	**/
 
-	 def search(String searchString){
+	def search(String searchString){
 	 	def searchParams
 		def results
 
@@ -251,7 +304,7 @@ class VoterService {
 	 }
 
 
-	 def searchByDivision(String searchString, Division division, int offset, int max){
+	def searchByDivision(String searchString, Division division, int offset, int max){
 	 	def searchParams
 		def results
 		def firstName
@@ -299,7 +352,7 @@ class VoterService {
 
 		return results
 
-	 }
+	}
 
 
 	 /**
@@ -308,7 +361,7 @@ class VoterService {
 	 @args offset the offset from where to start the query
 	 @args max the maximum number of records to acquire
 	 **/
-	 def listByDivision(Division division, int offset, int max){
+	def listByDivision(Division division, int offset, int max){
 	 	def results
 
 		results = Voter.executeQuery(LIST_BY_DIVISION_QUERY,
@@ -319,12 +372,21 @@ class VoterService {
 
 		return results
 	 	
-	 }
+	}
 
 
-	 def listByDivision(Division division){
+	def listByDivision(Division division){
 		Voter.executeQuery(LIST_BY_DIVISION_QUERY,[division:division])
 	 }
+
+	def printByDivision(Division division){	 		 
+		dataSource = SpringUtil.getBean('dataSource')
+	 	SqlParameterSource namedParameters = new MapSqlParameterSource("division_id", division.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(LIST_BY_DIVISION_FOR_PRINT_QUERY, namedParameters)
+        return results
+    }
 
 
 	/**
@@ -332,7 +394,7 @@ class VoterService {
 	@arg division 
 	@returns int total number of voters in division.
 	**/
-	 def countByDivision(Division division){
+	def countByDivision(Division division){
 	 	def results = Voter.executeQuery(GET_COUNT_OF_ALL_VOTERS_IN_A_DIVISIOIN_QUERY, 
 			[division: division])
 
@@ -475,6 +537,29 @@ class VoterService {
         }
 
 
+        return results
+    }
+
+
+    def printByAffiliation(Division division, Affiliation affiliation){
+    	dataSource = SpringUtil.getBean('dataSource')
+    	SqlParameterSource namedParameters = new MapSqlParameterSource("division_id", division.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+        namedParameters.addValue("affiliation_id", affiliation.id)
+
+        def results = namedParameterJdbcTemplate.queryForList(FILTER_BY_AFFILIATION_FOR_PRINT_QUERY, namedParameters)
+        return results
+
+    }
+
+
+    def printByPollStation(Division division, PollStation pollStation){
+    	dataSource = SpringUtil.getBean('dataSource')
+    	SqlParameterSource namedParameters = new MapSqlParameterSource("division_id", division.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+        namedParameters.addValue("poll_station_id", pollStation.id)
+
+        def results = namedParameterJdbcTemplate.queryForList(FILTER_BY_POLLSTATION_FOR_PRINT_QUERY, namedParameters)
         return results
     }
 

@@ -10,27 +10,28 @@ class PersonController {
 	def exportService
 	def voterService
 
-    def excelFields = ["registrationDate", "registrationNumber", "lastName", "firstName",
-                        "age", "birthDate", "registrationAddress.houseNumber",
-                        "registrationAddress.street", "registrationAddress.municipality",
-                        "registrationAddress"]
+    def excelFields = ["registration_date", "registration_number", "last_name", "first_name",
+                        "age", "birth_date", "house_number",
+                        "street", "municipality","phone_number1", "phone_number2",
+                        "phone_number3"]
     
     def pdfFields = ["registrationDate", "registrationNumber", "lastName", "firstName",
                         "age", "birthDate", "registrationAddress"]
 
-    def excelLabels = ["registrationDate": "Registration Date", "registrationNumber": "Registration Number",
-                        "firstName": "First Name", "lastName": "Last Name", "birthDate": "DOB",
-                        "age": "Age", "registrationAddress.houseNumber": "House #",
-                        "registrationAddress.street": "Street", "registrationAddress.municipality": "municipality",
-                        "registrationAddress": "Registration Address"]
+    def excelLabels = ["registration_date": "Registration Date", "registration_number": "Registration Number",
+                        "first_name": "First Name", "last_name": "Last Name", "birth_date": "DOB",
+                        "age": "Age", "house_number": "House #",
+                        "street": "Street", "municipality": "municipality",
+                        "phone_number1" : "Phone 1",
+                        "phone_number2" : "Phone 2", "phone_number3" : "Phone 3"]
 
-    def pdfLabels = ["registrationDate": "Registration Date", "registrationNumber": "Registration Number",
-                    "firstName": "First Name", "lastName": "Last Name", "birthDate": "DOB",
-                    "age": "Age", "registrationAddress": "Registration Address"]
+    def pdfLabels = ["registration_date": "Registration Date", "registration_number": "Registration Number",
+                    "first_name": "First Name", "last_name": "Last Name", "birth_date": "DOB",
+                    "age": "Age", "registration_address": "Registration Address"]
 
 
     def pdfParams = ["column.widths": [0.1, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2]]
-    def excelParams = ["column.widths": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]
+    def excelParams = ["column.widths": [0.1, 0.1, 0.1, 0.1, 0.05, 0.1, 0.05, 0.1, 0.1, 0.1, 0.05, 0.05]]
 
 
 	 def list() {
@@ -60,17 +61,20 @@ class PersonController {
 
             def dateFormatter = {domain, value->
                 value.format("dd-MMM-yyyy")
+                //new Date().parse("dd-MMM-yyyy", value)
             }
 
-            Map formatters = [registrationDate: dateFormatter, birthDate: dateFormatter]
+            
+
+            Map formatters = [registration_date: dateFormatter, birth_date: dateFormatter]
+            //Map formatters = [:]
 
 			def divisionInstance = Division.get(params.division)
 
             switch(params.listType){
                 case "ALL":
-			        voters = voterService.listByDivision(divisionInstance)
-                    parameters.title = "Voters"
-                    log.info "Printed list of all Voters as ${params.format}"
+                    voters = voterService.printByDivision(divisionInstance)
+                    parameters.title = "Voters"                    
                     break
 
                 case "NAME":
@@ -82,7 +86,7 @@ class PersonController {
                 case "AFFILIATION":
                     def filterType = FilterType.AFFILIATION
                     def affiliationInstance = Affiliation.get(params.affiliation.toLong())
-                    voters = voterService.filter(filterType.AFFILIATION,(Object)affiliationInstance,divisionInstance,0, 0)
+                    voters = voterService.printByAffiliation(divisionInstance,affiliationInstance)
                     parameters.title = "Voters with ${affiliationInstance} Affiliation"
                     log.info "Printed voters list: Voters with ${affiliationInstance} Affiliation as ${params.format} ."
                     break
@@ -90,7 +94,7 @@ class PersonController {
                 case "POLLSTATION":
                     def filterType = FilterType.POLL_STATION
                     def pollStationInstance = PollStation.get(params.pollStation.toLong())
-                    voters = voterService.filter(filterType.POLL_STATION,(Object)pollStationInstance,divisionInstance,0, 0)
+                    voters = voterService.printByPollStation(divisionInstance,pollStationInstance)
                     parameters.title = "Poll Station # ${pollStationInstance} "
                     log.info "Printed voters list : Voters at Poll Station # ${pollStationInstance} as ${params.format} ."
                     break
@@ -98,7 +102,7 @@ class PersonController {
             }
 
 
-			exportService.export(params.format,response.outputStream,voters, 
+			exportService.export(params?.format,response.outputStream,voters, 
 				fields, labels, formatters,parameters)
 
 		}

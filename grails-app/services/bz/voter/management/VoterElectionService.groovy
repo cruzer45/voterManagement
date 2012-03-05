@@ -41,6 +41,22 @@ class VoterElectionService {
 							                    "and poll.division =:division " +
                                                 "and ve.pledge =:pledge " 
 
+    static String FILTER_BY_PLEDGE_QUERY_PRINT  = "select v.registration_number, p.last_name, "+
+                                        "p.first_name, poll.poll_number, af.name as affiliation, " +
+                                        "pledge.name as pledge, ve.voted, ve.pickup_time, " +
+                                        "ra.house_number, ra.street, mun.name as municipality, " +
+                                        "ra.phone_number1, ra.phone_number2, ra.phone_number3 " +
+                                        "from voter_election as ve " +
+                                        "inner join voter as v on ve.voter_id = v.id " +
+                                        "inner join person as p on v.person_id = p.id " +
+                                        "inner join address as ra on ra.person_id = p.id " +
+                                        "inner join address_type as at on ra.address_type_id = at.id AND at.name = 'Registration' " +
+                                        "inner join municipality as mun on ra.municipality.id = mun.id " +
+                                        "where ve.election_id =:election_id " +
+                                        "and poll_station.division_id=:division_id " +
+                                        "and ve.pledge_id =:pledge_id and voted=:voted " +
+                                        "order by p.last_name"
+
 	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) as votes_count from VoterElection as ve " +
 										"inner join ve.voter as v " +
 							     		"inner join v.person as p " +
@@ -213,10 +229,10 @@ class VoterElectionService {
 	 @return a List of VoterElection
 	 **/
 
-	 def search(String searchString, Election election, Division division, int offset, int max){
+	def search(String searchString, Election election, Division division, int offset, int max){
 		executeQuery(searchString, QUERY,election,division,offset,max)
 
-	 }
+	}
 
 
 	/**
@@ -356,6 +372,21 @@ class VoterElectionService {
         }
 
         return _voters
+    }
+
+
+    def printByPledge(Election election, Division division, Pledge pledge, boolean voted){
+        dataSource = SpringUtil.getBean('dataSource')
+        SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
+        namedParameters.addValue("division_id", division.id)
+        namedParameters.addValue("pledge_id", pledge.id)
+        namedParameters.addValue("voted", voted)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(FILTER_BY_PLEDGE_QUERY_PRINT,namedParameters )
+
+        return results
+
     }
 
 

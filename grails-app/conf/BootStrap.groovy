@@ -15,7 +15,7 @@ class BootStrap {
 
 	def springSecurityService
 	def voterService
-	def importFileService
+	//def importFileService
 
 	def sessionFactory
 	def grailsApplication
@@ -162,7 +162,7 @@ class BootStrap {
 			test{
 				def division =  Division.findByName('Albert') ?: new Division(name:'Albert').save()
 				def election = Election.findByYear(2011) ?: new Election(year: 2011, electionType: ElectionType.findByName('General')).save()
-				importFileService.importVoters(division,election,'Sample.xls')
+				//importFileService.importVoters(division,election,'Sample.xls')
 
 			}
 
