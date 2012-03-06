@@ -43,13 +43,17 @@ class UploadVotersFileComposer extends GrailsComposer {
 	def importFileService
 
     def afterCompose = { window ->
-	 	divisionModel = new ListModelList(Division.list([sort:'name']))
-		divisionListbox.setModel(divisionModel)
+    	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN')){
+	 		divisionModel = new ListModelList(Division.list([sort:'name']))
+			divisionListbox.setModel(divisionModel)
 
-		fileUpload.setVisible(false)
-		electionListbox.setVisible(false)
-		electionListLabel.setVisible(false)
-		uploadLabel.setVisible(false)
+			fileUpload.setVisible(false)
+			electionListbox.setVisible(false)
+			electionListLabel.setVisible(false)
+			uploadLabel.setVisible(false)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
     }
 
 	 def onSelect_divisionListbox(){

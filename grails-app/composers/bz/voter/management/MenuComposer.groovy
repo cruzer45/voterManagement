@@ -5,6 +5,10 @@ import org.zkoss.zk.ui.select.annotation.Wire
 import org.zkoss.zk.ui.select.annotation.Listen
 import org.zkoss.zk.ui.*
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import bz.voter.management.zk.ComposerHelper
+
+
 class MenuComposer extends GrailsComposer {
 
 	def electionButton
@@ -23,7 +27,6 @@ class MenuComposer extends GrailsComposer {
 
 	 def onClick_electionButton(){
 	 	center.getChildren().clear()
-	 	println "Clicked on Election Button"
 		Executions.createComponents("/bz/voter/management/election.zul", center, null)
 	 	
 	 }
@@ -46,8 +49,12 @@ class MenuComposer extends GrailsComposer {
 	 }
 
 	 def onClick_systemButton(){
-	 	center.getChildren().clear()
-		Executions.createComponents("uploadVotersFile.zul",center,null)
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN')){
+	 		center.getChildren().clear()
+			Executions.createComponents("uploadVotersFile.zul",center,null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 
