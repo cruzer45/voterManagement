@@ -15,22 +15,31 @@ class PersonController {
                         "street", "municipality","phone_number1", "phone_number2",
                         "phone_number3"]
     
-    def pdfFields = ["registrationDate", "registrationNumber", "lastName", "firstName",
-                        "age", "birthDate", "registrationAddress"]
+    def pdfFields = ["registration_date", "registration_number", "last_name", "first_name",
+                        "age", "birth_date", "house_number",
+                        "street", "municipality"]
 
     def excelLabels = ["registration_date": "Registration Date", "registration_number": "Registration Number",
                         "first_name": "First Name", "last_name": "Last Name", "birth_date": "DOB",
-                        "age": "Age", "house_number": "House #",
-                        "street": "Street", "municipality": "municipality",
+                        "age": "Age", 
+                        "house_number": "House #",
+                        "street": "Street", 
+                        "municipality": "municipality",
                         "phone_number1" : "Phone 1",
                         "phone_number2" : "Phone 2", "phone_number3" : "Phone 3"]
 
-    def pdfLabels = ["registration_date": "Registration Date", "registration_number": "Registration Number",
-                    "first_name": "First Name", "last_name": "Last Name", "birth_date": "DOB",
-                    "age": "Age", "registration_address": "Registration Address"]
+    def pdfLabels = ["registration_date": "Registration Date", 
+                    "registration_number": "Registration Number",
+                    "first_name": "First Name", 
+                    "last_name": "Last Name", 
+                    "birth_date": "DOB",
+                    "age": "Age", 
+                    "house_number": "House #",
+                    "street": "Street", 
+                    "municipality": "municipality"]
 
 
-    def pdfParams = ["column.widths": [0.1, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2]]
+    def pdfParams = ["column.widths": [0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1,0.1,0.1]]
     def excelParams = ["column.widths": [0.1, 0.1, 0.1, 0.1, 0.05, 0.1, 0.05, 0.1, 0.1, 0.1, 0.05, 0.05]]
 
 

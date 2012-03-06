@@ -20,53 +20,77 @@ class VoterElectionService {
    //def namedParameterJdbcTemplate
 
 	static String  QUERY =  "select ve from VoterElection as ve " +
-							"inner join ve.voter as v " +
-						    "inner join v.person as p " +
-					 	    "inner join v.pollStation as poll " +
-							"where ve.election =:election " +
-							"and poll.division =:division " 
+				"inner join ve.voter as v " +
+				"inner join v.person as p " +
+				"inner join v.pollStation as poll " +
+				"where ve.election =:election " +
+				"and poll.division =:division " 
 
 	static String  COUNT_BY_SEARCH_QUERY =  "select count(ve.voter) from VoterElection as ve " +
-											"inner join ve.voter as v " +
-							      			"inner join v.person as p " +
-					 			   			"inner join v.pollStation as poll " +
-											"where ve.election =:election " +
-											"and poll.division =:division "
+						"inner join ve.voter as v " +
+						"inner join v.person as p " +
+					 	"inner join v.pollStation as poll " +
+						"where ve.election =:election " +
+						"and poll.division =:division "
 
 	static String  FILTER_BY_PLEDGE_QUERY  =  "select ve from VoterElection as ve " +
-							                    "inner join ve.voter as v " +
-						                        "inner join v.person as p " +
-					 	                        "inner join v.pollStation as poll " +
-							                    "where ve.election =:election " +
-							                    "and poll.division =:division " +
+						"inner join ve.voter as v " +
+						"inner join v.person as p " +
+					 	"inner join v.pollStation as poll " +
+						"where ve.election =:election " +
+						"and poll.division =:division " +
                                                 "and ve.pledge =:pledge " 
 
-    static String FILTER_BY_PLEDGE_QUERY_PRINT  = "select v.registration_number, p.last_name, "+
+        static String FILTER_BY_PLEDGE_QUERY_PRINT  = "select v.registration_number, p.last_name, "+
                                         "p.first_name, poll.poll_number, af.name as affiliation, " +
                                         "pledge.name as pledge, ve.voted, ve.pickup_time, " +
                                         "ra.house_number, ra.street, mun.name as municipality, " +
-                                        "ra.phone_number1, ra.phone_number2, ra.phone_number3 " +
-                                        "from voter_election as ve " +
-                                        "inner join voter as v on ve.voter_id = v.id " +
-                                        "inner join person as p on v.person_id = p.id " +
-                                        "inner join address as ra on ra.person_id = p.id " +
-                                        "inner join address_type as at on ra.address_type_id = at.id AND at.name = 'Registration' " +
-                                        "inner join municipality as mun on ra.municipality.id = mun.id " +
+                                        "ra.phone_number1 as phone1, ra.phone_number2 as phone2, " +
+                                        "ra.phone_number3 as phone3 " +
+                                        "from voter as v " +
+                                        "inner join voter_election as ve on ve.voter_id=v.id " +
+                                        "inner join person as p on v.person_id=p.id " +
+                                        "inner join address as ra on ra.person_id=p.id " +
+                                        "inner join address_type as ad_type on ra.address_type_id=ad_type.id AND ad_type.name = 'Registration' " +
+                                        "inner join municipality as mun on ra.municipality_id=mun.id " +
+                                        "inner join affiliation as af on v.affiliation_id=af.id " +
+                                        "inner join poll_station as poll on v.poll_station_id=poll.id " +
+                                        "inner join pledge as pledge on ve.pledge_id=pledge.id " +
                                         "where ve.election_id =:election_id " +
-                                        "and poll_station.division_id=:division_id " +
+                                        "and poll.division_id=:division_id " +
                                         "and ve.pledge_id =:pledge_id and voted=:voted " +
                                         "order by p.last_name"
 
+        static String FILTER_BY_PICKUP_TIME_QUERY_PRINT = "select v.registration_number, p.last_name, "+
+                                        "p.first_name, poll.poll_number, af.name as affiliation, " +
+                                        "pledge.name as pledge, ve.voted, ve.pickup_time, " +
+                                        "ra.house_number, ra.street, mun.name as municipality, " +
+                                        "ra.phone_number1 as phone1, ra.phone_number2 as phone2, " +
+                                        "ra.phone_number3 as phone3 " +
+                                        "from voter as v " +
+                                        "inner join voter_election as ve on ve.voter_id=v.id " +
+                                        "inner join person as p on v.person_id=p.id " +
+                                        "inner join address as ra on ra.person_id=p.id " +
+                                        "inner join address_type as ad_type on ra.address_type_id=ad_type.id AND ad_type.name = 'Registration' " +
+                                        "inner join municipality as mun on ra.municipality_id=mun.id " +
+                                        "inner join affiliation as af on v.affiliation_id=af.id " +
+                                        "inner join poll_station as poll on v.poll_station_id=poll.id " +
+                                        "inner join pledge as pledge on ve.pledge_id=pledge.id " +
+                                        "where ve.election_id =:election_id " +
+                                        "and poll.division_id=:division_id " +
+                                        "and ve.pickup_time like :hour || '%' and voted=:voted " +
+                                        "order by p.last_name"
+
 	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) as votes_count from VoterElection as ve " +
-										"inner join ve.voter as v " +
-							     		"inner join v.person as p " +
-					 			   		"inner join v.pollStation as poll " +
-										"where ve.election =:election " +
-										"and poll.division =:division " +
+					"inner join ve.voter as v " +
+					"inner join v.person as p " +
+					"inner join v.pollStation as poll " +
+					"where ve.election =:election " +
+					"and poll.division =:division " +
                                         "and ve.pledge =:pledge"
 
 
-    static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
+        static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
                                         "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 1 THEN 1 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 2 THEN 2 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 3 THEN 3 " +
@@ -101,7 +125,7 @@ class VoterElectionService {
                                         "GROUP BY vote_hour"
 
 
-    static String HOURLY_TOTAL_COUNT_BY_AFFILIATION_QUERY = 
+        static String HOURLY_TOTAL_COUNT_BY_AFFILIATION_QUERY = 
                         "SELECT count(ve.voter_id) as votes_count, " +
                         "affiliation.name as affiliation, " +
                         "CASE WHEN (EXTRACT(HOUR FROM ve.vote_time) = 1) THEN 1 " +
@@ -139,7 +163,7 @@ class VoterElectionService {
                         "ORDER BY vote_hour "
 
 
-   static String HOURLY_TOTAL_COUNT_BY_PLEDGE_QUERY = 
+        static String HOURLY_TOTAL_COUNT_BY_PLEDGE_QUERY = 
                         "SELECT COUNT(ve.voter_id) as votes_count, " +
                         "pledge.name as pledge, " +
                         "CASE WHEN (EXTRACT(HOUR FROM ve.vote_time) = 1) THEN 1 " +
@@ -177,7 +201,7 @@ class VoterElectionService {
                         "ORDER BY vote_hour "
 
 
-    static String PLEDGE_SUMMARY_QUERY = "select count(ve.voter) as total_voters, pledge.name as pledge "+
+        static String PLEDGE_SUMMARY_QUERY = "select count(ve.voter) as total_voters, pledge.name as pledge "+
                         "from VoterElection ve " +
                         "inner join ve.pledge pledge " +
                         "inner join ve.voter voter " +
@@ -351,28 +375,28 @@ class VoterElectionService {
     @param int max
     @return List of VoterElection
     **/
-    public List<VoterElection> filterByPledge(Election election, Division division, Pledge pledge, int offset, int max){
-        def _voters 
+        public List<VoterElection> filterByPledge(Election election, Division division, Pledge pledge, int offset, int max){
+                def _voters 
         
-        def query = FILTER_BY_PLEDGE_QUERY + " order by p.lastName"
-        if(max > 0){
-            _voters = VoterElection.executeQuery(query,[
-                        election: election,
-                        division: division,
-                        pledge: pledge,
-                        offset: offset,
-                        max: max
-                   ])
-        }else{
-            _voters = VoterElection.executeQuery(query,[
-                        election: election,
-                        division: division,
-                        pledge: pledge
-                   ])
-        }
+                def query = FILTER_BY_PLEDGE_QUERY + " order by p.lastName"
+                if(max > 0){
+                        _voters = VoterElection.executeQuery(query,[
+                                election: election,
+                                division: division,
+                                pledge: pledge,
+                                offset: offset,
+                                max: max
+                        ])
+                }else{
+                        _voters = VoterElection.executeQuery(query,[
+                                election: election,
+                                division: division,
+                                pledge: pledge
+                        ])
+                }
 
-        return _voters
-    }
+                return _voters
+        }
 
 
     def printByPledge(Election election, Division division, Pledge pledge, boolean voted){
@@ -507,6 +531,22 @@ class VoterElectionService {
 
    }
 
+
+
+    def printByPickupTime(Election election, Division division, PickupTimeEnum pickupTimeEnum, boolean voted){
+        dataSource = SpringUtil.getBean('dataSource')
+        def hourMarks = pickupTimeEnum.value().split('-')
+        SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
+        namedParameters.addValue("division_id", division.id)
+        namedParameters.addValue("hour", hourMarks[0])
+        namedParameters.addValue("voted", voted)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(FILTER_BY_PICKUP_TIME_QUERY_PRINT,namedParameters )
+
+        return results
+
+    }                
 
     /**
     Filters the voters at an election by Pickup Time and if they voted or not.
