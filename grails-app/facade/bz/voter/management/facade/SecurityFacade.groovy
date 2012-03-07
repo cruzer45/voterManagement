@@ -84,10 +84,10 @@ class SecurityFacade {
 
    			secUser.username = params.username ?: secUser.username
    			secUser.password = params.password ?: secUser.password
-   			secUser.enabled = params.enabled ?: secUser.enabled
-   			secUser.accountExpired = params.accountExpired ?: secUser.accountExpired
-   			secUser.accountLocked = params.accountLocked ?: secUser.accountLocked
-   			secUser.passwordExpired = params.passwordExpired ?: secUser.passwordExpired
+   			secUser.enabled = params.enabled
+   			secUser.accountExpired = params.accountExpired 
+   			secUser.accountLocked = params.accountLocked 
+   			secUser.passwordExpired = params.passwordExpired
 
    			secUser.validate()
 
@@ -108,9 +108,6 @@ class SecurityFacade {
    				}
    			}
    		}
-
-   		
-   		//flushSession()
    		return secUser
    	}
 
@@ -125,10 +122,10 @@ class SecurityFacade {
    	}
 
    	private removeRoleFromUser(String authority, SecUser secUser){
-   		SecRole secRole = SecRole.findByAuthority(authority)
-   		if(secRole && !secUser.hasRole(secRole)){
-   			SecUserSecRole.remove(secUser,secRole)
-   		}   		
+         SecRole secRole = SecRole.findByAuthority(authority)         
+   		if(secRole && secUser.hasRole(secRole)){
+   			SecUserSecRole.remove(secUser,secRole,true)
+   		}
    	}
 
 

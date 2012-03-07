@@ -128,7 +128,6 @@ class UserComposer extends GrailsComposer {
 					    label(value: _user.enabled)
 					    label(value: 
 		                    SecUserSecRole.findAllBySecUser(_user).collect {userRole->
-		                    	println "secRole: ${userRole.secRoleId}"
 		                     	def secRole = SecRole.get(userRole.secRoleId)
 		                     	return secRole.authority 
 		                     } ) 
