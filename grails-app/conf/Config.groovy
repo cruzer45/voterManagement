@@ -68,7 +68,7 @@ grails.plugin.databasemigration.updateOnStartFileNames = ["changelog.groovy"]
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://74.207.233.149:8080/${appName}"
+        grails.serverURL = "http://localhost:8080/${appName}"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
@@ -111,10 +111,6 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-// Added by the Spring Security Core plugin:
-//grails.plugins.springsecurity.userLookup.userDomainClassName = 'bz.voter.management.SecUser'
-//grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'bz.voter.management.UserProfile'
-//grails.plugins.springsecurity.authority.className = 'bz.voter.management.Profile'
 
 // Added by the Spring Security Core plugin:
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'bz.voter.management.SecUser'
@@ -125,7 +121,3 @@ grails.plugins.springsecurity.filterChain.chainMap = [
 	'/**': 'JOINED_FILTERS',
 ]
 
-// Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'bz.voter.management.SecUser'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'bz.voter.management.SecUserSecRole'
-grails.plugins.springsecurity.authority.className = 'bz.voter.management.SecRole'

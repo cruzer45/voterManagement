@@ -14,7 +14,7 @@ environments {
 			username = "voter_management"
 			password = ".,password.\$"
             //dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:postgresql://127.0.0.1:5432/voter-management"
+            url = "jdbc:postgresql://127.0.0.1:5432/albert-division"
         }
     }
     test {
