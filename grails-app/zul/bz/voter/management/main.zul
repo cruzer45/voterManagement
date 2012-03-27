@@ -115,7 +115,7 @@
 					value="Voter Management System"/>
 				</div>
 			</north>
-			<west title="Sidebar" id="w" flex="true" collapsible="true"  width="15%">
+			<west title="Sidebar" id="w" flex="true" collapsible="true"  width="20%">
 				<vlayout style="padding: 8px;" >
 					<include src="/bz/voter/management/menu.zul"/>
 				</vlayout>

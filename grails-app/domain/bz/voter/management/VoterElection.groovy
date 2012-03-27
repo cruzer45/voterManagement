@@ -71,6 +71,7 @@ class VoterElection implements Serializable{
 		pledge fetch:'join'
     	election fetch:'join'
     	voter fetch:'join'
+        dynamicUpdate true
 	 }
 
 	/**

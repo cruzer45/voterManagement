@@ -5,7 +5,7 @@ class Election implements Serializable{
 	Integer year
 	Date electionDate
 	ElectionType electionType
-    boolean complete //After an election is complete, no records pertaining to that election can be modified.
+   boolean complete //After an election is complete, no records pertaining to that election can be modified.
 
     String toString(){
         "${year} : ${electionType.name}"
@@ -36,7 +36,9 @@ class Election implements Serializable{
 
     
     def beforeValidate(){
-        this.complete = this.id ? false : this.complete
+      if(!this.id){
+         this.complete = false
+      }
     }
 
 

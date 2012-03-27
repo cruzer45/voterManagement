@@ -71,7 +71,7 @@
 			<panel title="Users" style="padding:4px;" border="normal">
 				<panelchildren >
 					<toolbar>
-						<button id="addUserButton" label="Create User" />
+                  <toolbarbutton id="addUserButton" image="/images/add.png" tooltip="addUserToolTip"/>
 					</toolbar>
 					<grid mold="paging" pageSize="20">
 						<columns menupopup="auto" width="100%">
@@ -83,6 +83,12 @@
 						<rows id="usersListRows">
 						</rows>
 					</grid>
+
+               <vbox>
+                 <popup id="addUserToolTip">
+                    Add New User.
+                 </popup>
+              </vbox>
 				</panelchildren>
 			</panel>
 

@@ -36,14 +36,7 @@ grails.project.dependency.resolution = {
 
         runtime 'postgresql:postgresql:8.4-701.jdbc4'
         runtime "org.grails.plugins:hibernate:$grailsVersion"
-        runtime "org.grails.plugins:jquery:1.7.1"
-        runtime "org.grails.plugins:resources:1.1.6"
-       
-        compile "org.grails.plugins:export:1.1"
-        compile "org.grails.plugins:spring-security-core:1.2.7.2"
-        compile "org.grails.plugins:mail:1.0"
-        compile "org.grails.plugins:rest:0.7" 
-        compile "org.grails.plugins:zk:2.0.0.M5"
+        //compile "org.grails.plugins:zk:2.0.0.M6"
 
         build "org.grails.plugins:tomcat:$grailsVersion"   
         
@@ -51,6 +44,14 @@ grails.project.dependency.resolution = {
 
     plugins{
          //compile ":database-migration:1.0"
+         runtime "org.grails.plugins:jquery:1.7.1"
+         runtime "org.grails.plugins:resources:1.1.6"
+        
+         compile ":export:1.1"
+         compile ":spring-security-core:1.2.7.2"
+         compile ":mail:1.0"
+         compile ":rest:0.7" 
+         compile ":zk:2.0.0.M6"
 
     }
 }

@@ -19,6 +19,8 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 	def cancelElectionButton
 	def saveElectionButton
 	def electionCrudDiv
+    def completeElectionCheckbox
+    def completeElectionLabel
 
 	def electionFormPanel
 
@@ -76,7 +78,8 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 			id: electionIdLabel.getValue(),
 			year: yearTextbox.getValue()?.trim()?.toInteger(),
 			electionDate:  electionDatebox.getValue(),
-			electionType: ElectionType.get(electionTypeListbox.getSelectedItem()?.getLastChild()?.getLabel()) ?: null
+			electionType: ElectionType.get(electionTypeListbox.getSelectedItem()?.getLastChild()?.getLabel()) ?: null,
+         complete:  completeElectionCheckbox.isChecked()
 		]
 
 		def electionInstance = electionService.save(electionMap)
@@ -109,13 +112,19 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 		electionsListRows.append{
 			for(_election in electionService.list()){
-				def electionInstance = Election.get(_election.id)
+				Election electionInstance = Election.get(_election.id)
 				row{
 					label(value: _election.year)
-					label(value: _election.electionDate?.format('dd-MMM-yyyy'))
+					label(value: electionInstance.electionDate?.format('dd-MMM-yyyy'))
 					label(value: _election.electionType)
+                    label(value: _election.complete ? 'Yes' : 'No')
 					button(label: 'Edit', onClick:{						
-						showElectionFormGrid(electionInstance)
+                        if(electionInstance.complete){
+                            Messagebox.show('This Election has ended. You can not edit a completed Election!', 'Election Message',
+                                Messagebox.OK, Messagebox.EXCLAMATION)
+                        }else{
+						    showElectionFormGrid(electionInstance)
+                        }
 					})
 					button(label: 'Poll Station', onClick:{
 						if(SpringSecurityUtils.ifAnyGranted("ROLE_ADMIN, ROLE_POLL_STATION")){
@@ -146,10 +155,14 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 	def showElectionFormGrid(Election electionInstance){
 		electionIdLabel.setValue("")
+        electionDatebox.setValue(electionInstance?.electionDate)
 		errorMessages.getChildren().clear()
 	 	addElectionButton.setVisible(false)
 		electionFormPanel.setVisible(true)
 		yearTextbox.setConstraint('no empty')
+        completeElectionLabel.setVisible(false)
+        completeElectionCheckbox.setVisible(false)
+        completeElectionCheckbox.setValue("false")
 
 
 		electionTypeListbox.getChildren().clear()
@@ -171,6 +184,9 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 			electionDatebox.setValue(electionInstance?.electionDate)
 			yearTextbox.setValue("${electionInstance?.year}")
 			electionIdLabel.setValue("${electionInstance.id}")
+            completeElectionLabel.setVisible(true)
+            completeElectionCheckbox.setVisible(true)
+            completeElectionCheckbox.setValue("${electionInstance?.complete}")
 			for(item in electionTypeListbox.getItems()){
 				if(item?.getValue()?.id ==  electionInstance.electionType.id){
 					electionTypeListbox.setSelectedItem(item)

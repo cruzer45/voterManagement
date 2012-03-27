@@ -214,29 +214,29 @@ class VoterElectionService {
                                            
 
    def sessionFactory
+   def propertyInstanceMap = org.codehaus.groovy.grails.plugins.DomainClassGrailsPlugin.PROPERTY_INSTANCE_MAP
 
    def addAllVoters(Election election) {
 	 	if(VoterElection.findAllByElection(election).size() < 1){
 			//Add all voters to election
 			def pledge = Pledge.findByCode('U')
-			int cnt = 0
-			def flush = false
 			def sizeOfList = Voter.count()
-			for(voter in Voter.list()){
-				if(cnt == 100 || (sizeOfList < 100 && cnt == sizeOfList - 1 )){
-					flush = true
-					cnt =  0
-				}
-				if(voter.registrationDate.toCalendar().get(Calendar.YEAR) <= election.year){
-					VoterElection.create(voter,election,null,flush)	
-					flush = false
-					cnt++
-				}
-			}
+            Voter.list().eachWithIndex{voter, index ->
+                if((voter.registrationDate.toCalendar().get(Calendar.YEAR) <= election.year) && (voter.isAlive())){
+                    VoterElection.create(voter,election,pledge)
+                }
+
+                if(index % 100 == 0) cleanUpGorm()
+            }
 		}
 
-		sessionFactory.getCurrentSession().flush()
+    }
 
+    def cleanUpGorm(){
+        def session= sessionFactory.getCurrentSession()
+        session.flush()
+        session.clear()
+        propertyInstanceMap.get().clear()
     }
 
 

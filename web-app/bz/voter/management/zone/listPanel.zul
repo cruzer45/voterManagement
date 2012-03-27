@@ -46,7 +46,6 @@
     			</listhead>
     		</listbox>
 
-
     		 <vbox>
     		 	<popup id="addZoneToolTip">
     		 		Add New Zone.

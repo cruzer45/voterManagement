@@ -10,8 +10,6 @@
 
     <toolbar id="electionNavigationDiv"
     	apply="bz.voter.management.ElectionNavigationComposer">
-
-
 	 	
 		<toolbarbutton id="electionsListButton" label="Elections"/>
 		<toolbarbutton id="divisionsButton" label="Divisions"/>

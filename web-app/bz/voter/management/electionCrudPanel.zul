@@ -34,6 +34,10 @@
 								<label value="Election Type" />
 								<listbox id="electionTypeListbox" mold="select" rows="1"/>
 							</row>
+                            <row>
+                                <label value="Completed Election" id="completeElectionLabel" visible="false"/>
+                                <checkbox id="completeElectionCheckbox" visible="false"/>
+                            </row>
 							<row>
 								<cell colspan="2" >
 									<label id="electionIdLabel" visible="false" />
@@ -53,20 +57,27 @@
 				<panel title="Elections" style="padding:4px;" border="normal">
 					<panelchildren style="5px">
 					<toolbar>
-						<button id="addElectionButton" label="Create Election" />
+                  <toolbarbutton id="addElectionButton" image="/images/add.png" tooltip="addElectionToolTip"/>
 					</toolbar>
 					<grid mold="paging" pageSize="20" >
 						<columns menupopup="auto" width="100%">
-							<column label="Year" align="left" sort="auto" />
-							<column label="Date" align="left" sort="auto" />
-							<column label="Type" align="left" sort="auto" />
-							<column />
-							<column />
-							<column />
+							<column label="Year" align="left" width="10%"/>
+							<column label="Date" align="left" width="10%"/>
+							<column label="Type" align="left" width="20%"/>
+                            <column label="Completed" align="left" width="10%"/>
+							<column align="center"/>
+							<column align="center"/>
+							<column align="center"/>
 						</columns>
 						<rows id="electionsListRows">
 						</rows>
 					</grid>
+
+               <vbox>
+                 <popup id="addElectionToolTip">
+                    Add New Election.
+                 </popup>
+              </vbox>
 					</panelchildren>
 				</panel>
 				</vlayout>

@@ -25,7 +25,8 @@ public class OfficeStationVoterRenderer implements RowRenderer{
     public void render(Row row, java.lang.Object data){
         def _voterElection = data
         
-        def voterElection = _voterElection.voterElection
+        VoterElection voterElection = _voterElection.voterElection
+        Election _election = Election.get(voterElection.electionId)
 
         grid = row.getParent()
         mainDiv = grid.getParent().getParent().getParent().getParent()
@@ -35,9 +36,10 @@ public class OfficeStationVoterRenderer implements RowRenderer{
         def votedLabel = _voterElection.voted ? 'Yes' : 'No'
 
         Button saveButton = new Button(saveButtonLabel)
+        saveButton.setDisabled(_election.complete)
         saveButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event evt) throws Exception{
-			    def HOUR = /10|11|12|[0-9]/
+			   def HOUR = /10|11|12|[0-9]/
 				def MINUTE = /[0-5][0-9]/
 				def TIME = /($HOUR):($MINUTE)/
 				def valid = (_voterElection.pickupTime =~ TIME).matches()

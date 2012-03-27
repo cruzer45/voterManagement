@@ -39,16 +39,16 @@ class VoterElectionComposer extends GrailsComposer {
 	def divisionInstance
 
 	def votersListRows
-    Grid pollStationVotersGrid
-    Paging voterPaging
+   Grid pollStationVotersGrid
+   Paging voterPaging
 
-    ElectionVotersPagingListModel electionVoterModel = null 
+   ElectionVotersPagingListModel electionVoterModel = null 
 
 	def election 
 
-    def voterListFacade
+   def voterListFacade
 
-	private final int _pageSize = 15
+	private final int _pageSize = 10
 	private int _startPageNumber = 0
 	private int _totalSize = 0
 	private boolean _needsTotalSizeUpdate = true

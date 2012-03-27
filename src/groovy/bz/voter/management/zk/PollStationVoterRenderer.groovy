@@ -18,14 +18,15 @@ import bz.voter.management.VoterElection
 public class PollStationVoterRenderer implements RowRenderer{
 
     public void render(Row row, java.lang.Object data){
-        def _voterElection =  data
+      def _voterElection =  data
 		def voted = _voterElection.voted ? true : false
 		def backgroundColor = voted ? "red" : "white"
-        Checkbox votedCheckbox = new Checkbox()
-        votedCheckbox.checked = _voterElection.voted ?: false
+      Checkbox votedCheckbox = new Checkbox()
+      votedCheckbox.checked = _voterElection.voted ?: false
 
-        Button saveButton = new Button('Save')
-        saveButton.addEventListener("onClick", new EventListener(){
+      Button saveButton = new Button('Save')
+      saveButton.setDisabled(_voterElection.complete)
+      saveButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event evt) throws Exception{
                 
                 def voterElection = _voterElection.voterElection
@@ -42,8 +43,10 @@ public class PollStationVoterRenderer implements RowRenderer{
 		        }
             }
         })
+       
 
         Button detailsButton = new Button('Details')
+        detailsButton.setDisabled(_voterElection.complete)
         detailsButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event event) throws Exception{
 				final Window win = (Window) Executions.createComponents("/bz/voter/management/voterGeneralInformation.zul", 
@@ -52,6 +55,7 @@ public class PollStationVoterRenderer implements RowRenderer{
 				win.setPosition("top,center")
             }
         })
+
 
         votedCheckbox.addEventListener("onCheck", new EventListener(){
             public void onEvent(Event event) throws Exception{

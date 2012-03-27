@@ -49,13 +49,13 @@ class VoterComposer extends GrailsComposer {
 	Grid votersGrid
 	Paging voterPaging
 
-    def votersDiv
+   def votersDiv
 
 	DivisionVotersPagingListModel voterModel = null
 
 	def voterService = SpringUtil.getBean('voterService')
 
-    def voterListFacade = SpringUtil.getBean('voterListFacade')
+   def voterListFacade = SpringUtil.getBean('voterListFacade')
   
 
     //Identifies the type of voter list we are displaying.
@@ -69,7 +69,7 @@ class VoterComposer extends GrailsComposer {
     FilterType _filterType
     def _filterValue
 
-    private Division division
+   private Division division
 
 	private final int _pageSize = 10
 	private int _startPageNumber = 0

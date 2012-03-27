@@ -226,7 +226,8 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
             voted:              _voterElection.voted,
             affiliation:        Affiliation.get(_voter.affiliation.id),
             pickupTime:         _voterElection.pickupTime,
-            pledge:             Pledge.get(_voterElection.pledgeId)
+            pledge:             Pledge.get(_voterElection.pledgeId),
+            complete:           Election.get(_voterElection.electionId).complete
 
         ]
 

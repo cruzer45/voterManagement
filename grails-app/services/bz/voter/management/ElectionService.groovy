@@ -7,7 +7,6 @@ import bz.voter.management.spring.SpringUtil
 class ElectionService {
 
 
-
 	def sessionFactory
 	def voterElectionService
 
@@ -28,22 +27,23 @@ class ElectionService {
 
     @Transactional
     public Election save(params){
-    	def electionInstance = Election.get(params.id) ?: new Election()
+    	Election electionInstance = Election.get(params.id) ?: new Election()
+      boolean addVoters = electionInstance?.id ? false : true
 		
 		electionInstance.year = params.year ?: election?.year  	
 		electionInstance.electionDate = params.electionDate ?: electionInstance?.electionDate
 		electionInstance.electionType = params.electionType ?: electionInstance.electionType
-		electionInstance.complete = params.complete ?: electionInstance.complete
+		electionInstance.complete = params.complete ? params.complete : electionInstance.complete
 
 		electionInstance.validate()
 
 		if(electionInstance.hasErrors()){
 			log.error electionInstance.retrieveErrors()
 		}else{
-			println "Election id before saving: ${electionInstance.id}"
-			println "Saving election instance."
 			electionInstance.save(flush:true)
-			voterElectionService.addAllVoters(electionInstance)		
+         if(addVoters){
+            voterElectionService.addAllVoters(electionInstance)		
+         }
 		}
 		
 		return electionInstance
@@ -56,11 +56,8 @@ class ElectionService {
     **/
     def list(){
     	def elections = []
-    	for(election in Election.list([sort:'year'])){
-    		/*
-    		if(!election.isAttached()){
-    			election.attach()
-    		}*/
+    	//for(election in Election.list([sort:'year'])){
+      for(election in Election.list()){
 
     		def electionType = election.electionType
 

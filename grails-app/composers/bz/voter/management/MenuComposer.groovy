@@ -16,8 +16,9 @@ class MenuComposer extends GrailsComposer {
 	def voterButton
 	def signOutButton
 	def systemButton
-    def passwordButton
-    def zonesButton
+   def passwordButton
+   def zonesButton
+   def electionBtn
 
 	def center
 	

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+  <div apply="bz.voter.management.MenuComposer">
+	 	<panel width="100%" border="normal"  title="Navigation">
+			<panelchildren style="padding:5px;">
+				<vbox>
+					<toolbarbutton id="electionButton" label="Election"/>
+					<toolbarbutton id="voterButton" label="Voters"/>
+					<toolbarbutton id="zonesButton" label="Zones" />
+					<toolbarbutton id="userButton" label="Users"/>
+					<toolbarbutton id="systemButton" label="System"/>
+					<toolbarbutton id="passwordButton" label="Change Password"/>
+					<toolbarbutton id="signOutButton" label="Sign Out"/>
+				</vbox>
+			</panelchildren>
+		</panel>
+	</div>
+
+</zk>
