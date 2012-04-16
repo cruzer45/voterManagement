@@ -41,7 +41,7 @@ class VoterElectionService {
 						"and poll.division =:division " +
                                                 "and ve.pledge =:pledge " 
 
-        static String FILTER_BY_PLEDGE_QUERY_PRINT  = "select v.registration_number, p.last_name, "+
+   static String FILTER_BY_PLEDGE_QUERY_PRINT  = "select v.registration_number, p.last_name, "+
                                         "p.first_name, poll.poll_number, af.name as affiliation, " +
                                         "pledge.name as pledge, ve.voted, ve.pickup_time, " +
                                         "ra.house_number, ra.street, mun.name as municipality, " +

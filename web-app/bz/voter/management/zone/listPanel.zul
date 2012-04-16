@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./zonesListPanel"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./zonesListGrid"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?page zscriptLanguage="GroovyGrails"?>
 
@@ -8,10 +8,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div align="left">
+    <window  id="zonesListGrid" action="show:slideDown"
+       apply="bz.voter.management.zone.ListPanelComposer">
+       <div align="left">
     	
-    <panel id="zonesListPanel" border="rounded" title="Zones"
-    	apply="bz.voter.management.zone.ListPanelComposer">
+    <panel id="zonesListPanel" border="rounded" title="Zones">
     	
     	<panelchildren>
     
@@ -40,11 +41,10 @@
     			</rows>
     		</grid>
 
-    		<listbox id="zonesListbox">
-    			<listhead>
-    				<listheader label="Zone"/>    				
-    			</listhead>
-    		</listbox>
+    		<grid id="zonesListbox">
+            <rows id="zonesRows">
+            </rows>
+    		</grid>
 
     		 <vbox>
     		 	<popup id="addZoneToolTip">
@@ -56,6 +56,7 @@
     </panel>
 
     </div>
+    </window>
 
 
 </zk>

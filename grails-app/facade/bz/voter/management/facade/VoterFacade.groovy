@@ -8,11 +8,11 @@ import bz.voter.management.spring.SpringUtil
 
 class VoterFacade {
 
-    Voter voter
+   Voter voter
 
 	def voterService
-    def personService = SpringUtil.getBean('personService')
-    def addressService = SpringUtil.getBean('addressService')
+   def personService = SpringUtil.getBean('personService')
+   def addressService = SpringUtil.getBean('addressService')
 
 	def sessionFactory
 
@@ -578,6 +578,29 @@ class VoterFacade {
         def voterElection = VoterElection.get(voter?.id, election?.id)
 
         return Pledge.get(voterElection?.pledgeId)
+    }
+
+
+    def search(String searchString, Division division){
+      def results = []
+      for(voter in voterService.searchByDivision(searchString, division,0,0)){
+         def _voter = [
+            id: voter.id,
+            registrationNumber: voter.registrationNumber,
+            firstName: voter.firstName,
+            lastName: voter.lastName,
+            birthDate: voter.birthDate.format('dd-MMM-yyyy'),
+            age: voter.age,
+            houseNumber: voter.registrationAddress.houseNumber,
+            street: voter.registrationAddress.street,
+            municipality: voter.registrationAddress.municipality.name
+           ]
+        results.add(_voter)
+
+      }
+
+      return results
+
     }
 
 

@@ -3,9 +3,9 @@ package bz.voter.management
 class Zone {
 
 	String name
-    Voter captain
+   Voter captain
 
-    String toString(){ name }
+   String toString(){ name }
 
     static constraints = {
     	name(unique: true, blank: false)

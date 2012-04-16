@@ -67,18 +67,23 @@
 			color: blue
 		}
 
-        .header{
+      .caption{
+         font-weight: bold;
+         padding: 1em 0.2em;
+         font-size: 1.3em;
+      }
+
+      .header{
             padding: 0px 0px 10px 5px;
-            font-size: 24px;
+            font-size: 1.8em;
             color: #008BB6;
             font-weight: bold
-        }
+      }
 
-
-        .gridHeaders{
+      .gridHeaders{
             font-size: 0.75em;
             font-weight: bolder
-        }
+      }
 
         .voteCountLabels{
             font-size: 0.75em
@@ -109,14 +114,14 @@
     <window  width="100%" height="100%" apply="bz.voter.management.MainComposer" contentStyle="overflow:auto">
 
 		<borderlayout>
-			<north size="50px" id="n">
+			<north size="30px" id="n">
 				<div id="header">
 					<label class="header" id="headerLabel"
 					value="Voter Management System"/>
 				</div>
 			</north>
-			<west title="Sidebar" id="w" flex="true" collapsible="true"  width="15%">
-				<vlayout style="padding: 8px;" >
+			<west title="Sidebar" id="w" flex="true" collapsible="true"  width="10%">
+				<vlayout style="padding: 4px;" >
 					<include src="/bz/voter/management/menu.zul"/>
 				</vlayout>
 			</west>

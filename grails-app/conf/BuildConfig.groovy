@@ -22,6 +22,7 @@ grails.project.dependency.resolution = {
         // from public Maven repositories
         //mavenLocal()
         mavenCentral()
+        mavenRepo "https://oss.sonatype.org/content/repositories/releases"
         mavenRepo "http://snapshots.repository.codehaus.org"
         mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
@@ -38,7 +39,6 @@ grails.project.dependency.resolution = {
         runtime "org.grails.plugins:hibernate:$grailsVersion"
         //compile "org.grails.plugins:zk:2.0.0.M6"
 
-        build "org.grails.plugins:tomcat:$grailsVersion"   
         
     }
 
@@ -52,6 +52,18 @@ grails.project.dependency.resolution = {
          compile ":mail:1.0"
          compile ":rest:0.7" 
          compile ":zk:2.0.0.M6"
+
+         if(Environment.current == Environment.DEVELOPMENT){
+            compile ":build-test-data:2.0.2"
+            compile ":fixtures:1.1-SNAPSHOT"
+         }else{
+            test ":build-test-data:2.0.2"
+            test ":fixtures:1.1-SNAPSHOT"
+         }
+         //compile ":build-test-data:2.0.2"
+         //compile ":fixtures:1.1-SNAPSHOT"
+
+          build ":tomcat:$grailsVersion"   
 
     }
 }

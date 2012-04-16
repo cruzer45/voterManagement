@@ -13,7 +13,7 @@
 	 	<vlayout vflex='3'>
 
 			<panel style="padding: 4px" 
-				border="normal" vflex='2' >
+				border="normal" vflex='2'  >
 				<panelchildren style="padding:5px" >
 					<toolbar>
                         <cell>
@@ -36,7 +36,7 @@
 					</toolbar>
 
 					<paging id="voterPaging" autohide="true" detailed="true"/>
-					<grid  vflex='2' hflex="1" id="electionOfficeVotersGrid" style="overflow:auto">
+					<grid  vflex='2' hflex="1" id="electionOfficeVotersGrid" >
 						<columns  sizable="true">
 							<column align="left" width="5%"><label value="Reg #" sclass="columnsCell" /></column>
 							<column align="left"><label value="Last Name" sclass="columnsCell"/></column>
@@ -49,9 +49,9 @@
 							<column align="left" width="5%"><label value="Pledge" sclass="columnsCell"/></column>
 							<column align="left" width="4%"><label value="Voted" sclass="columnsCell"/></column>
 							<column ><label value="Pickup Time" sclass="columnsCell"/></column>
-							<column  />
-							<column />
-							<column />
+							<column  width="5%"/>
+							<column width="5%"/>
+                     <column width="6%"/>
 						</columns>
 						<rows id="votersListRows" vflex='1'>
 						</rows>

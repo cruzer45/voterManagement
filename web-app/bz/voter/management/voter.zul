@@ -7,7 +7,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-
     <div id="votersDiv" apply="bz.voter.management.VoterComposer" 
 	 	style="margin:2px;font-size: small" vflex='1' align="left">
 				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
@@ -41,13 +40,13 @@
 							<column align="left" ><label value="Reg #" sclass="columnsCell" /></column>
 							<column align="left" ><label value="Last Name" sclass="columnsCell"/></column>
 							<column align="left" ><label value="First Name" sclass="columnsCell"/></column>
-							<column align="left" ><label value="Age" sclass="columnsCell" /></column>
+							<column align="center" ><label value="Age" sclass="columnsCell" /></column>
 							<column align="left" ><label value="Birth Date" sclass="columnsCell"/></column>
-							<column align="left" ><label value="House #" sclass="columnsCell"/></column>
+							<column align="center" ><label value="House #" sclass="columnsCell"/></column>
 							<column align="left" ><label value="Street" sclass="columnsCell"/></column>
 							<column align="left" ><label value="Municipality" sclass="columnsCell"/></column>
-							<column align="left" ><label value="Poll #" sclass="columnsCell"/></column>
-							<column  />
+							<column align="center" width="6%" ><label value="Poll #" sclass="columnsCell"/></column>
+							<column  align="center" width="6%"/>
 						</columns>
 						<rows id="votersListRows" style="font-size: 0.5em">
 						</rows>

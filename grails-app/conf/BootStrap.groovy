@@ -22,6 +22,8 @@ class BootStrap {
 	def messageSource
 	def unknownMunicipality
 
+   def fixtureLoader
+
    static String fileName = ConfigurationHolder.config.files.dir + "Sample.xls"
    static String albertFile = "/usr/local/files/albert.xlsx"
    static String caribbeanShoresFile = "/usr/local/files/caribbean_shores.xlsx"
@@ -163,6 +165,10 @@ class BootStrap {
 				def division =  Division.findByName('Albert') ?: new Division(name:'Albert').save()
 				def election = Election.findByYear(2011) ?: new Election(year: 2011, electionType: ElectionType.findByName('General')).save()
 				//importFileService.importVoters(division,election,'Sample.xls')
+
+            fixtureLoader.with{
+               load('zones')
+            }
 
 			}
 

@@ -7,6 +7,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
+    <style>
+       .save_btn{
+         width: 70%;
+         cursor: pointer;
+       }
+    </style>
+
     <div apply="bz.voter.management.VoterElectionComposer" align="left"
 	 	style="margin:2px;font-size: 0.625em" vflex='1'>
 
@@ -31,7 +38,7 @@
 							<column align="left" ><label value="Last Name" sclass="columnsCell"/></column>
 							<column align="left" ><label value="First Name" sclass="columnsCell"/></column>
 							<column align="left" width="5%"><label  value="Hose #" sclass="columnsCell" /></column>
-							<column align="left" width="8%"><label value="Street" sclass="columnsCell"/></column>
+							<column align="left" width="12%"><label value="Street" sclass="columnsCell"/></column>
 							<column align="left"><label value="Municipality" sclass="columnsCell"/></column>
 							<column align="left" width="10%">
 								<label value="Date of Birth" sclass="columnsCell"/>
@@ -42,8 +49,8 @@
 							<column align="left" width="5%">
 								<label value="Voted" sclass="columnsCell" />
 							</column>
-							<column width="8%"/>
-							<column width="8%"/>
+							<column width="6%"/>
+							<column width="6%"/>
 						</columns>
 						<rows id="votersListRows">
 						</rows>

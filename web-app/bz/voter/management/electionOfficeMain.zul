@@ -7,7 +7,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-	 <div align="left" vflex="4"
+	 <div align="left" vflex="4" style="overflow:auto"
 	 	apply="bz.voter.management.ElectionOfficeMainComposer">
 
 	 	<vlayout>
@@ -15,7 +15,7 @@
 			<div vflex="min" id="navigationBox">
 			</div>
 
-			<div vflex="3" id="electionOfficeCenter"  >
+			<div vflex="max" id="electionOfficeCenter" >
 			</div>
 
 		</vlayout>

@@ -4,7 +4,7 @@ import org.zkoss.zul.Label
 import org.zkoss.zul.Row
 import org.zkoss.zul.RowRenderer
 import org.zkoss.zul.Window
-import org.zkoss.zul.Button
+import org.zkoss.zul.Toolbarbutton
 import org.zkoss.zk.ui.event.Event
 import org.zkoss.zk.ui.event.EventListener
 import org.zkoss.zk.ui.Executions
@@ -29,11 +29,12 @@ public class VoterRenderer implements RowRenderer{
         panel = grid.getParent().getParent()
         centerPanel = panel.getParent().getParent()
 
-		Button manageButton = new Button("Manage")
+		Toolbarbutton manageButton = new Toolbarbutton("","/images/round_arrow_right.png")
+      manageButton.setTooltiptext('Edit Voter')
 
 
-        manageButton.addEventListener("onClick", new EventListener(){
-            public void onEvent(Event event) throws Exception{
+      manageButton.addEventListener("onClick", new EventListener(){
+          public void onEvent(Event event) throws Exception{
                 centerPanel.getChildren().clear()
                 Executions.createComponents("/bz/voter/management/display/panel/voterMainPanel.zul",
                     centerPanel, [voter: voter])

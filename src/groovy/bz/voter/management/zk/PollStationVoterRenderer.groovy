@@ -4,7 +4,8 @@ import org.zkoss.zul.Label
 import org.zkoss.zul.Row
 import org.zkoss.zul.RowRenderer
 import org.zkoss.zul.Window
-import org.zkoss.zul.Button
+import org.zkoss.zul.Toolbarbutton
+import org.zkoss.zul.Image
 import org.zkoss.zul.Messagebox
 import org.zkoss.zul.Checkbox
 import org.zkoss.zk.ui.event.Event
@@ -24,35 +25,41 @@ public class PollStationVoterRenderer implements RowRenderer{
       Checkbox votedCheckbox = new Checkbox()
       votedCheckbox.checked = _voterElection.voted ?: false
 
-      Button saveButton = new Button('Save')
+      Toolbarbutton saveButton = new Toolbarbutton('','/images/checkbox_checked.png')
       saveButton.setDisabled(_voterElection.complete)
       saveButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event evt) throws Exception{
                 
-                def voterElection = _voterElection.voterElection
-                VoterElection.withTransaction{status->
-                    voterElection.voted = _voterElection.voted
-			         voterElection.save(flush:true)
-                 }
-			    Messagebox.show("Saved Successfuly!", "Voter", 
-			        Messagebox.OK, Messagebox.INFORMATION)
-			    if(voterElection.voted){
-			        evt.getTarget().getParent().setStyle("background-color:red")
-			    }else{
-			        evt.getTarget().getParent().setStyle("background-color: white")
-		        }
+                if(! _voterElection.complete){
+
+                  def voterElection = _voterElection.voterElection
+                  VoterElection.withTransaction{status->
+                     voterElection.voted = _voterElection.voted
+			            voterElection.save(flush:true)
+                  }
+			         Messagebox.show("Saved Successfuly!", "Voter", 
+			            Messagebox.OK, Messagebox.INFORMATION)
+			         if(voterElection.voted){
+			            evt.getTarget().getParent().setStyle("background-color:red")
+			         }else{
+			            evt.getTarget().getParent().setStyle("background-color: white")
+
+		            }
+              }
             }
         })
        
 
-        Button detailsButton = new Button('Details')
+        Toolbarbutton detailsButton = new Toolbarbutton('','/images/eye_inv.png')
         detailsButton.setDisabled(_voterElection.complete)
         detailsButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event event) throws Exception{
-				final Window win = (Window) Executions.createComponents("/bz/voter/management/voterGeneralInformation.zul", 
-					null, [voterElection: _voterElection.voterElection])
-				win.doModal()
-				win.setPosition("top,center")
+               if(!_voterElection.complete){
+				      final Window win = (Window) Executions.createComponents("/bz/voter/management/voterGeneralInformation.zul", 
+					      null, [voterElection: _voterElection.voterElection])
+				      win.doModal()
+				      win.setPosition("top,center")
+               }
             }
         })
 
