@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./captainWindow"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <window apply="bz.voter.management.zone.CaptainComposer" 
+       id="captainWindow" action="show:slideIn">
+       <div style="overflow:auto">
+          <panel>
+             <panelchildren>
+                <div align="left">
+                   <toolbarbutton id="returnButton" image="/images/prev.png" tooltip="return"/>
+                   <label id="header" sclass="header" />
+                </div>
+                <vlayout id="currentCaptainDiv" width="100%">
+                   <div align="left">
+                      <label value="Current Captain" sclass="caption"/>
+                   </div>
+                   <div align="left" >
+                      <toolbar>
+                         <toolbarbutton image="/images/eye_inv_small.png" id="viewDetialsButton" />
+                         <separator bar='false' orient="vertical"/>
+                         <toolbarbutton image="/images/trash_small.png" id="removeCaptainButton" />
+                      </toolbar>
+                      <grid id="currentCaptainGrid" >
+                         <columns>
+                            <column align="right" width="10%" />
+                            <column align="left"/>
+                         </columns>
+                         <rows id="captainRows">
+                            <row>
+                               <label value="Registration #" sclass="varLabel"/>
+                               <label id="registrationNumberLabel" value="@{captainWindow$composer.captain.registrationNumber}"/>
+                            </row>
+                            <row>
+                               <label value="First Name" sclass="varLabel"/>
+                               <label id="firstNameLabel" value="@{captainWindow$composer.captain.firstName}" />
+                            </row>
+                            <row>
+                               <label value="Last Name" sclass="varLabel"/>
+                               <label id="lastNameLabel" value="@{captainWindow$composer.captain.lastName}" />
+                            </row>
+                            <row>
+                               <label value="Age" sclass="varLabel"/>
+                               <label id="ageLabel" value="@{captainWindow$composer.captain.age}" />
+                            </row>
+                            <row>
+                               <label value="Birth Date" sclass="varLabel"/>
+                               <label id="birthDateLabel" value="@{captainWindow$composer.captain.birthDate}" />
+                            </row>
+                         </rows>
+                      </grid>
+                   </div>
+               </vlayout>
+                <toolbar>
+                   <textbox id="voterSearchTextbox" />
+                   <toolbarbutton id="searchVoterButton" image="/images/search.png" tooltip="searchHelp"/>
+                </toolbar>
+               <grid id="votersGrid" mold="paging" pageSize="5">
+                  <columns menupopup="auto" sizable="true">
+                     <column align="left" sort="auto">
+                        <label value="Reg #" sclass="columnsCell"/>
+                     </column>
+                     <column align="left" sort="auto">
+                        <label value="Last Name" sclass="columnsCell"/>
+                     </column>
+                     <column align="left" sort="auto">
+                        <label value="First Name" sclass="columnsCell" />
+                     </column>
+                     <column align="left">
+                        <label value="Age" sclass="columnsCell" />
+                     </column>
+                     <column align='left'>
+                        <label value='Birth Date' sclass='columnsCell'/>
+                     </column>
+                     <column align='left'>
+                        <label value="House #" sclass='columnsCell'/>
+                     </column>
+                     <column align='left' sort="auto">
+                        <label value='Street' sclass='columnsCell'/>
+                     </column>
+                     <column align='left'>
+                        <label value='Municipality' sclass='columnsCell'/>
+                     </column>
+                     <column />
+                  </columns>
+                  <rows id="votersListRows">
+                  </rows>
+               </grid>
+             </panelchildren>
+          </panel>
+
+          <vbox>
+             <popup id="searchHelp" width="20%">
+                To search enter First Name and Last Name separated by a comma. 
+                For example, to search for Mr. John Doe, use the 
+                following search pattern:
+                   John,Doe
+             </popup>
+             <popup id="return">
+                Return
+             </popup>
+          </vbox>
+       </div>
+
+    </window>
+
+</zk>
